@@ -11,7 +11,6 @@ import {
 
 import Home from "./components/home";
 import Login from "./components/login";
-import SignUp from "./components/register";
 import Reservations from "./components/reservations";
 import Payments from "./components/payments";
 import Management from "./components/management";
@@ -122,28 +121,9 @@ function App() {
 
             <Route
               path="/Login"
-              element={
-                user ? (
-                  <Navigate to="/profile" />
-                ) : (
-                  <div className="auth-wrapper">
-                    <div className="auth-inner">
-                      <Login />
-                    </div>
-                  </div>
-                )
-              }
+              element={user ? <Navigate to="/profile" /> : <Login />}
             />
-            <Route
-              path="/Register"
-              element={
-                <div className="auth-wrapper">
-                  <div className="auth-inner">
-                    <Register />
-                  </div>
-                </div>
-              }
-            />
+            <Route path="/Register" element={<Register />} />
           </Routes>
           <ToastContainer />
         </div>
