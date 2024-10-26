@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import {
@@ -6,40 +6,146 @@ import {
   Routes,
   Route,
   Navigate,
+  NavLink,
 } from "react-router-dom";
 
+import Home from "./components/home";
 import Login from "./components/login";
 import SignUp from "./components/register";
+import Reservations from "./components/reservations";
+import Payments from "./components/payments";
+import Management from "./components/management";
+import Profile from "./components/profile";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Profile from "./components/profile";
-import { useState } from "react";
-import { auth } from "./config/firebase"
+import { auth } from "./config/firebase";
+import Register from "./components/register";
 
 function App() {
   const [user, setUser] = useState();
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user: any) => {
       setUser(user);
     });
   });
   return (
     <Router>
-      <div className="App">
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <Routes>
-              <Route
-                path="/"
-                element={user ? <Navigate to="/profile" /> : <Login />}
-              />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<SignUp />} />
-              <Route path="/profile" element={<Profile />} />
-            </Routes>
-            <ToastContainer />
+      <div>
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+          <div className="container-fluid">
+            <a className="navbar-brand" href="/">
+              EV
+            </a>
+            {/* For smaller screens */}
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNavAltMarkup"
+              aria-controls="navbarNavAltMarkup"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div className="navbar-nav me-auto">
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  to="/"
+                >
+                  Home
+                </NavLink>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  to="/Management"
+                >
+                  Manage
+                </NavLink>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  to="/Reservations"
+                >
+                  Reservations
+                </NavLink>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "nav-link active" : "nav-link"
+                  }
+                  to="/Payments"
+                >
+                  Payments
+                </NavLink>
+              </div>
+              <div className="navbar-nav">
+                {user ? (
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive ? "nav-link active" : "nav-link"
+                    }
+                    to="/profile"
+                  >
+                    Profile
+                  </NavLink>
+                ) : (
+                  <NavLink
+                    className={({ isActive }) =>
+                      isActive ? "nav-link active" : "nav-link"
+                    }
+                    to="/Login"
+                  >
+                    Login/Register
+                  </NavLink>
+                )}
+              </div>
+            </div>
           </div>
+        </nav>
+
+        <div id="main">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/Reservations" element={<Reservations />} />
+            <Route path="/Payments" element={<Payments />} />
+            <Route path="/Management" element={<Management />} />
+            <Route
+              path="/profile"
+              element={user ? <Profile /> : <Navigate to="/Login" />}
+            />
+
+            <Route
+              path="/Login"
+              element={
+                user ? (
+                  <Navigate to="/profile" />
+                ) : (
+                  <div className="auth-wrapper">
+                    <div className="auth-inner">
+                      <Login />
+                    </div>
+                  </div>
+                )
+              }
+            />
+            <Route
+              path="/Register"
+              element={
+                <div className="auth-wrapper">
+                  <div className="auth-inner">
+                    <Register />
+                  </div>
+                </div>
+              }
+            />
+          </Routes>
+          <ToastContainer />
         </div>
       </div>
     </Router>
