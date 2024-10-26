@@ -8,7 +8,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -17,7 +17,7 @@ function Login() {
       toast.success("User logged in Successfully", {
         position: "top-center",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
 
       toast.error(error.message, {
@@ -60,7 +60,7 @@ function Login() {
       <p className="forgot-password text-right">
         New user <a href="/register">Register Here</a>
       </p>
-      <SignInwithGoogle/>
+      <SignInwithGoogle />
     </form>
   );
 }

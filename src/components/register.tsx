@@ -10,7 +10,7 @@ function Register() {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
 
-  const handleRegister = async (e) => {
+  const handleRegister = async (e: any) => {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
@@ -21,14 +21,14 @@ function Register() {
           email: user.email,
           firstName: fname,
           lastName: lname,
-          photo:""
+          photo: "",
         });
       }
       console.log("User Registered Successfully!!");
       toast.success("User Registered Successfully!!", {
         position: "top-center",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.log(error.message);
       toast.error(error.message, {
         position: "bottom-center",

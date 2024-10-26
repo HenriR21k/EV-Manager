@@ -1,20 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { User } from "firebase/auth";
+
+interface UserDetails {
+  photo: string;
+  firstName: string;
+  email: string;
+  lastName?: string;
+}
 
 function Profile() {
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const fetchUserData = async () => {
-    auth.onAuthStateChanged(async (user) => {
-      console.log(user);
-
-      const docRef = doc(db, "Users", user.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setUserDetails(docSnap.data());
-        console.log(docSnap.data());
-      } else {
-        console.log("User is not logged in");
+    auth.onAuthStateChanged(async (user: User | null) => {
+      if (!user || !user.uid) {
+        console.log("User not logged in");
+        window.location.href = "/login";
+        return;
+      }
+      try {
+        const docRef = doc(db, "Users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserDetails(docSnap.data() as UserDetails);
+          console.log(docSnap.data());
+        } else {
+          console.log("User is not logged in");
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
       }
     });
   };
@@ -27,7 +42,7 @@ function Profile() {
       await auth.signOut();
       window.location.href = "/login";
       console.log("User logged out successfully!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error logging out:", error.message);
     }
   }
