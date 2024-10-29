@@ -43,4 +43,10 @@
   top: 50%;
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+  z-index: 1;
+}
+
+.navbar {
+  position: relative;
+  z-index: 2;
 }
