@@ -24,14 +24,14 @@ const Forgot = () => {
     <div className="auth-wrapper">
       <div className="auth-inner">
         <form onSubmit={handleSubmit}>
-          <h3>Forgot Password</h3>
+          <h3>Reset Your Password</h3>
 
           <div className="mb-3">
             <label>Email address</label>
             <input
               type="email"
               className="form-control"
-              placeholder="Enter your email"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -44,7 +44,7 @@ const Forgot = () => {
             </button>
           </div>
 
-          <p className="forgot-password text-left">
+          <p className="forgot-password">
             <a href="/login">Back To Login</a>
           </p>
         </form>

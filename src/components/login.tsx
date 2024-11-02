@@ -61,10 +61,10 @@ function Login() {
           </div>
           <div className="d-flex justify-content-between">
             <p className="forgot-password" style={{ textAlign: "left" }}>
-              New user <a href="/register">Register Here</a>
+              New user? <a href="/register">Register Here</a>
             </p>
             <p className="forgot-password">
-              <a href="/forgot">Forgot Password</a>
+              <a href="/forgot">Forgot Password?</a>
             </p>
           </div>
           <SignInwithGoogle />
