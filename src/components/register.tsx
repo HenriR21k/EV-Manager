@@ -1,4 +1,7 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { useState } from "react";
 import { auth, db } from "../config/firebase";
 import { setDoc, doc } from "firebase/firestore";
@@ -42,6 +45,14 @@ function Register() {
           lastName: lname,
           photo: "",
         });
+
+        await sendEmailVerification(user);
+        toast.info(
+          "A confirmation email has been sent. Please verify your email address.",
+          {
+            position: "top-center",
+          }
+        );
       }
       console.log("User Registered Successfully!!");
       toast.success("User Registered Successfully!!", {
