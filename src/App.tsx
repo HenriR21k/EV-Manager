@@ -15,6 +15,7 @@ import Reservations from "./components/reservations";
 import Payments from "./components/payments";
 import Management from "./components/management";
 import Profile from "./components/profile";
+import Forgot from "./components/forgot";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -113,6 +114,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/Reservations" element={<Reservations />} />
             <Route path="/Payments" element={<Payments />} />
+            <Route path="/Forgot" element={<Forgot />} />
             <Route path="/Management" element={<Management />} />
             <Route
               path="/profile"
