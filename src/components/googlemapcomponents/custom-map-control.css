@@ -1,0 +1,40 @@
+.modal {
+  display: flex;
+  position: fixed;
+  z-index: 1000; /* Ensure this is higher than the autocomplete dropdown */
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  z-index: 1001; /* This can also be higher if necessary */
+  position: relative; /* Ensure the modal content is positioned correctly */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.autocomplete-control {
+  margin-top: 10px;
+}
