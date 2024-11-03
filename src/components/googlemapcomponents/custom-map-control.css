@@ -16,8 +16,8 @@
   padding: 20px;
   border-radius: 8px;
   width: 300px;
-  z-index: 1001; /* This can also be higher if necessary */
-  position: relative; /* Ensure the modal content is positioned correctly */
+  z-index: 1001;
+  position: relative; 
 }
 
 .close {

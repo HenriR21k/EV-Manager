@@ -21,7 +21,6 @@ export default function Management() {
         const locationData = locationSnapshot.docs.map(doc => {
           const evlocation = doc.data().evlocation;
           
-          // Ensure lat and lng are numbers for Google Maps compatibility
           return {
             lat: evlocation._lat,
             lng: evlocation._long
