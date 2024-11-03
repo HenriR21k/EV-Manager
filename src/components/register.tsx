@@ -1,4 +1,7 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { useState } from "react";
 import { auth, db } from "../config/firebase";
 import { setDoc, doc } from "firebase/firestore";
@@ -7,11 +10,30 @@ import { toast } from "react-toastify";
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/; // At least 1 uppercase, 1 number, and 6 characters
+
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        "Password must be at least 6 characters long, at least 1 uppercase letter and number.",
+        {
+          position: "bottom-center",
+        }
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match", { position: "bottom-center" });
+      return;
+    }
+
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       const user = auth.currentUser;
@@ -23,6 +45,14 @@ function Register() {
           lastName: lname,
           photo: "",
         });
+
+        await sendEmailVerification(user);
+        toast.info(
+          "A confirmation email has been sent. Please verify your email address.",
+          {
+            position: "top-center",
+          }
+        );
       }
       console.log("User Registered Successfully!!");
       toast.success("User Registered Successfully!!", {
@@ -81,6 +111,17 @@ function Register() {
               className="form-control"
               placeholder="Enter password"
               onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Confirm password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
           </div>

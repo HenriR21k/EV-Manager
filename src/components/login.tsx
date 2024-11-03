@@ -59,9 +59,14 @@ function Login() {
               Submit
             </button>
           </div>
-          <p className="forgot-password text-right">
-            New user <a href="/register">Register Here</a>
-          </p>
+          <div className="d-flex justify-content-between">
+            <p className="forgot-password" style={{ textAlign: "left" }}>
+              New user? <a href="/register">Register Here</a>
+            </p>
+            <p className="forgot-password">
+              <a href="/forgot">Forgot Password?</a>
+            </p>
+          </div>
           <SignInwithGoogle />
         </form>
       </div>
