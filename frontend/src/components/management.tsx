@@ -7,7 +7,11 @@ import useLoad from './api/useLoad';
 import { collection, getDocs, addDoc, GeoPoint } from 'firebase/firestore';
 import configuration from "../config/configuration";
 
+
 export default function Management() {
+
+
+  const {API_KEY, MAP_KEY} = process.env;
 
   const endpoint = `/Locations`
   const [locations, setLocations, loadingMessage, loadLocations] = useLoad(endpoint)

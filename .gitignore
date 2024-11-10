@@ -7,6 +7,7 @@ frontend/.pnp
 frontend/.pnp.js
 frontend/.env
 backend/.env
+.env
 
 
 /frontend/src/components/config
