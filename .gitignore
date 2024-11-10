@@ -5,6 +5,8 @@ backend/node_modules
 frontend/node_modules
 frontend/.pnp
 frontend/.pnp.js
+frontend/.env
+backend/.env
 
 
 /frontend/src/components/config
