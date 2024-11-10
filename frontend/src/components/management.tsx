@@ -3,13 +3,16 @@ import { APIProvider, ControlPosition, Map, AdvancedMarker } from "@vis.gl/react
 import {CustomMapControl} from './googlemapcomponents/map-control';
 import MapHandler from "./googlemapcomponents/map-handler";
 import { db } from '../config/firebase';
+import useLoad from './api/useLoad';
 import { collection, getDocs, addDoc, GeoPoint } from 'firebase/firestore';
 import configuration from "../config/configuration";
 
+
 export default function Management() {
 
-  const [selectedPlace, setSelectedPlace] =
-  useState<null>(null);
+  const endpoint = `/Locations`
+  const [locations, setLocations, loadingMessage, loadLocations] = useLoad(endpoint)
+  const [selectedPlace, setSelectedPlace] = useState<null>(null);
   const [markers, setMarkers] = useState<any[]>([]);
 
   useEffect(() => {
@@ -46,11 +49,13 @@ export default function Management() {
       };
 
       setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
-
+      let testevlocation = new GeoPoint(newMarker.lat, newMarker.lng)
+      console.log("test: "+ JSON.stringify(testevlocation))
       try {
         const locationsCollection = collection(db, 'Locations');
         await addDoc(locationsCollection, {
           evlocation: new GeoPoint(newMarker.lat, newMarker.lng),
+          
         });
         console.log("New marker added to Firestore:", newMarker);
       } catch (error) {

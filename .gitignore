@@ -1,13 +1,16 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+backend/node_modules
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.js
+frontend/.env
+backend/.env
+.env
 
-*.env
 
-/src/components/config
+/frontend/src/components/config
 
 # testing
 /coverage
@@ -27,4 +30,4 @@ yarn-debug.log*
 yarn-error.log*
 
 
-/src/config
+/frontend/src/config
