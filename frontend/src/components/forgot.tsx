@@ -21,33 +21,35 @@ const Forgot = () => {
   };
 
   return (
-    <div className="auth-wrapper">
-      <div className="auth-inner">
-        <form onSubmit={handleSubmit}>
-          <h3>Reset Your Password</h3>
+    <div className="forgot-container">
+      <div className="auth-wrapper">
+        <div className="auth-inner">
+          <form onSubmit={handleSubmit}>
+            <h3>Reset Your Password</h3>
 
-          <div className="mb-3">
-            <label>Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+            <div className="mb-3">
+              <label>Email address</label>
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              Send Reset Link
-            </button>
-          </div>
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary">
+                Send Reset Link
+              </button>
+            </div>
 
-          <p className="forgot-password">
-            <a href="/login">Back To Login</a>
-          </p>
-        </form>
+            <p className="forgot-password">
+              <a href="/login">Back To Login</a>
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );

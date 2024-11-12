@@ -50,7 +50,7 @@ function App() {
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div className="navbar-nav me-auto">
+              <div className="navbar-nav">
                 <NavLink
                   className={({ isActive }) =>
                     isActive ? "nav-link active" : "nav-link"
@@ -109,7 +109,7 @@ function App() {
           </div>
         </nav>
 
-        <div id="main">
+        <div>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Reservations" element={<Reservations />} />

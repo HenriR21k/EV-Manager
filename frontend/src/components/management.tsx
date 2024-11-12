@@ -60,27 +60,33 @@ export default function Management() {
   };
 
   return (
-    <APIProvider apiKey={configuration.API.API_KEY}>
-      <Map
-        style={{ width: "100vw", height: "100vh" }}
-        defaultZoom={3}
-        defaultCenter={{ lat: 22.54992, lng: 0 }}
-        gestureHandling={"greedy"}
-        disableDefaultUI={true}
-        mapId={configuration.API.MAP_KEY}
-      >
-        {markers.map((marker, index) => (
-          <AdvancedMarker key={index} position={marker} />
-        ))}
-      </Map>
-      <CustomMapControl
-        controlPosition={ControlPosition.TOP}
-        onPlaceSelect={(place) => {
-          setSelectedPlace(place);
-          addMarker(place);
-        }}
-      />
-      <MapHandler place={selectedPlace} />
-    </APIProvider>
+    <div className="management-container">
+      <h1>Manage EV points</h1>
+      <div className="map-container">
+        <APIProvider apiKey={configuration.API.API_KEY}>
+          <Map
+            className="the-map"
+            style={{ width: "100vw", height: "100vh" }}
+            defaultZoom={3}
+            defaultCenter={{ lat: 22.54992, lng: 0 }}
+            gestureHandling={"greedy"}
+            disableDefaultUI={true}
+            mapId={configuration.API.MAP_KEY}
+          >
+            {markers.map((marker, index) => (
+              <AdvancedMarker key={index} position={marker} />
+            ))}
+          </Map>
+          <CustomMapControl
+            controlPosition={ControlPosition.TOP}
+            onPlaceSelect={(place) => {
+              setSelectedPlace(place);
+              addMarker(place);
+            }}
+          />
+          <MapHandler place={selectedPlace} />
+        </APIProvider>
+      </div>
+    </div>
   );
 }

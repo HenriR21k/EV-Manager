@@ -1,3 +1,6 @@
+$yellow:#ffd539;
+$bright-blue:#34c3d1;
+$dark-blue:#2263b5;
 * {
   margin: 0;
   padding: 0;
@@ -6,64 +9,55 @@
   font-weight: bold;
 }
 
-nav {
+nav{
   z-index: 1;
 }
-
-.bg-dark {
-  background-color: #ffd539 !important;
-  color: #2263b5 !important;
+  
+.bg-dark{
+  background-color: $yellow !important;
+  color: $dark-blue !important;
 }
-
 .navbar-dark .navbar-nav .nav-link {
-  color: #2263b5 !important;
+  color: $dark-blue!important;
 }
-
 .navbar-dark .navbar-nav .nav-link:hover,
 .navbar-dark .navbar-nav .nav-link:focus {
-  color: #34c3d1 !important;
+  color: $bright-blue !important;
 }
-
 .navbar-dark .navbar-brand {
-  color: #2263b5;
+  color: $dark-blue;
 }
-
 .navbar-toggler-icon {
-  background-color: #2263b5 !important;
+  background-color: $dark-blue !important;
   border-radius: 0.25em;
 }
-
 body {
-  background-color: #34c3d1;
+  background-color: $bright-blue;
 }
-
 .home-container, .management-container, .reservations-container, .payments-container, .login-container, .profile-container, .register-container, .forgot-container {
-  max-width: 100%;
-  max-height: 100%;
-  padding: 20px;
-  margin: auto;
-  text-align: center;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 20px;
+    margin: auto;
+    text-align: center;
+    h1 {
+      margin-bottom: 20px;
+      color:white;
+    }
 }
-.home-container h1, .management-container h1, .reservations-container h1, .payments-container h1, .login-container h1, .profile-container h1, .register-container h1, .forgot-container h1 {
-  margin-bottom: 20px;
-  color: white;
-}
-
 .map-container {
-  max-width: 1000px;
-  margin: auto;
-  text-align: center;
-  padding: 20px;
-  height: 500px;
-  background-color: white;
-  border-radius: 20px;
-}
-
+    max-width: 1000px;
+    margin: auto;
+    text-align: center;
+    padding: 20px;
+    height: 500px;
+    background-color: white;
+    border-radius: 20px;
+}  
 .the-map {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
-
 .auth-wrapper {
   display: flex;
   justify-content: center;
@@ -79,8 +73,8 @@ body {
 
 .auth-inner {
   max-width: 500px;
-  margin-right: 40px;
-  align-self: center;
+  margin-right:40px;
+  align-self:center;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
   padding: 30px;
@@ -89,7 +83,7 @@ body {
 }
 
 .auth-wrapper .form-control:focus {
-  border-color: #34c3d1;
+  border-color: $bright-blue;
   box-shadow: none;
 }
 
@@ -98,60 +92,51 @@ body {
   margin: 0;
   line-height: 1;
   padding-bottom: 20px;
-  color: #34c3d1;
+  color: $bright-blue
 }
 
 .custom-control-label {
   font-weight: 400;
 }
 
-.forgot-password,
+.forgot-password, 
 .forgot-password a {
   text-align: right;
   font-size: 13px;
   padding-top: 10px;
-  color: #34c3d1;
+  color: $bright-blue;
   margin: 0;
 }
 
 .forgot-password a {
-  color: #2263b5;
+  color: $dark-blue;
 }
-
-.continue-p {
+.continue-p{
   font-size: 12px;
-  color: #34c3d1;
+  color: $bright-blue;
   font-weight: 600;
   margin-top: 1rem;
   text-align: center;
 }
-
-.btn-primary {
-  background-color: #2263b5;
+.btn-primary{
+  background-color: $dark-blue;
 }
-
-.btn {
-  border: none;
+.btn{
+  border:none;
 }
-
 label {
-  color: #34c3d1;
+  color: $bright-blue
 }
-
 .form-control {
-  color: #34c3d1;
+  color: $bright-blue;
   background-color: white;
   border: none;
-  border-bottom: 2px solid #34c3d1;
+  border-bottom: 2px solid $bright-blue;
   border-radius: 0;
 }
-
 .form-control::placeholder {
-  color: #34c3d1;
+  color: $bright-blue;
 }
-
 .form-control:focus {
-  color: #34c3d1;
+  color: $bright-blue;
 }
-
-/*# sourceMappingURL=App.css.map */
