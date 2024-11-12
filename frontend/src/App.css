@@ -3,7 +3,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: Helvetica;
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 nav {
@@ -52,6 +52,7 @@ body {
 .map-container {
   max-width: 1000px;
   margin: auto;
+  margin-bottom: 30px;
   text-align: center;
   padding: 20px;
   height: 500px;
@@ -152,6 +153,24 @@ label {
 
 .form-control:focus {
   color: #34c3d1;
+}
+
+.marker-details {
+  max-width: 1000px;
+  margin: auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+}
+.marker-details h2 {
+  color: #34c3d1;
+}
+.marker-details p {
+  color: #34c3d1;
+}
+
+.custom-map-control {
+  color: red;
 }
 
 /*# sourceMappingURL=App.css.map */

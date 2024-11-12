@@ -6,7 +6,7 @@ $dark-blue:#2263b5;
   padding: 0;
   box-sizing: border-box;
   font-family: Helvetica;
-  font-weight: bold;
+  font-weight: bold !important;
 }
 
 nav{
@@ -48,6 +48,7 @@ body {
 .map-container {
     max-width: 1000px;
     margin: auto;
+    margin-bottom: 30px;
     text-align: center;
     padding: 20px;
     height: 500px;
@@ -139,4 +140,17 @@ label {
 }
 .form-control:focus {
   color: $bright-blue;
+}
+.marker-details {
+  max-width: 1000px;
+  margin:auto;
+  background-color: white;
+  padding: 20px;
+  border-radius: 20px;
+  h2 {
+    color:$bright-blue
+  }
+  p {
+    color:$bright-blue
+  }
 }

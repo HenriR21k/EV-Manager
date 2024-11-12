@@ -12,13 +12,20 @@ import useLoad from "./api/useLoad";
 import { collection, getDocs, addDoc, GeoPoint } from "firebase/firestore";
 import configuration from "../config/configuration";
 
+type MarkerLocation = {
+  lat: number;
+  lng: number;
+};
+
 export default function Management() {
   const endpoint = `/Locations`;
   const [locations, setLocations, loadingMessage, loadLocations] =
     useLoad(endpoint);
   const [selectedPlace, setSelectedPlace] = useState<null>(null);
-  const [markers, setMarkers] = useState<any[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState(null);
+  const [markers, setMarkers] = useState<MarkerLocation[]>([]);
+  const [selectedMarker, setSelectedMarker] = useState<MarkerLocation | null>(
+    null
+  );
 
   useEffect(() => {
     loadLocations();
@@ -34,6 +41,9 @@ export default function Management() {
         };
       });
       setMarkers(locationData);
+      if (locationData.length > 0) {
+        setSelectedMarker(locationData[0]);
+      }
     } else console.log(loadingMessage);
   }, [locations]);
 
@@ -59,6 +69,15 @@ export default function Management() {
     }
   };
 
+  const handleMarkerClick = (marker: MarkerLocation, index: number) => {
+    setSelectedMarker(marker);
+    console.log("Selected marker:", marker);
+  };
+  const handleReservation = () => {
+    if (selectedMarker) {
+    }
+  };
+
   return (
     <div className="management-container">
       <h1>Manage EV points</h1>
@@ -66,7 +85,6 @@ export default function Management() {
         <APIProvider apiKey={configuration.API.API_KEY}>
           <Map
             className="the-map"
-            style={{ width: "100vw", height: "100vh" }}
             defaultZoom={3}
             defaultCenter={{ lat: 22.54992, lng: 0 }}
             gestureHandling={"greedy"}
@@ -74,7 +92,11 @@ export default function Management() {
             mapId={configuration.API.MAP_KEY}
           >
             {markers.map((marker, index) => (
-              <AdvancedMarker key={index} position={marker} />
+              <AdvancedMarker
+                key={index}
+                position={marker}
+                onClick={() => handleMarkerClick(marker, index)}
+              />
             ))}
           </Map>
           <CustomMapControl
@@ -87,6 +109,16 @@ export default function Management() {
           <MapHandler place={selectedPlace} />
         </APIProvider>
       </div>
+      {selectedMarker && (
+        <div className="marker-details">
+          <h2>Selected Location Details</h2>
+          <p>Latitude: {selectedMarker.lat}</p>
+          <p>Longitude: {selectedMarker.lng}</p>
+          <button onClick={handleReservation} className="btn btn-primary">
+            Reserve EV Charging Point
+          </button>
+        </div>
+      )}
     </div>
   );
 }
