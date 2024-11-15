@@ -11,6 +11,7 @@ import { db } from "../config/firebase";
 import useLoad from "./api/useLoad";
 import { collection, getDocs, addDoc, GeoPoint } from "firebase/firestore";
 import configuration from "../config/configuration";
+import Reservations from "./reservations";
 
 type MarkerLocation = {
   lat: number;

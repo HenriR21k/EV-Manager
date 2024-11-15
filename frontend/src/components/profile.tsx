@@ -38,7 +38,7 @@ function Profile() {
   };
 
   const verifyEmailStatus = () => {
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user: any) => {
       if (user) {
         setIsVerified(user.emailVerified);
       }
