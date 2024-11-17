@@ -169,8 +169,20 @@ label {
   color: #34c3d1;
 }
 
-.custom-map-control {
-  color: red;
+.reservations-list, .locations-list {
+  margin: auto;
+  max-width: 350px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.reservation-item, .location-item {
+  border: 2px solid #2263b5;
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #ffd539;
+  color: #2263b5;
 }
 
 /*# sourceMappingURL=App.css.map */

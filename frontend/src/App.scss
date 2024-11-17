@@ -154,3 +154,17 @@ label {
     color:$bright-blue
   }
 }
+.reservations-list, .locations-list {
+  margin:auto;
+  max-width: 350px;
+  padding-left: 0;
+  list-style: none;
+}
+.reservation-item, .location-item {
+  border: 2px solid $dark-blue;
+  border-radius: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: $yellow;
+  color: $dark-blue
+}
