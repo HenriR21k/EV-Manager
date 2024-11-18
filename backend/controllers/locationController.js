@@ -20,18 +20,36 @@ export const getAllLocations = async (req, res, next) => {
     try {
         const Locations = collection(db, 'Locations');
         const data = await getDocs(Locations);
-        const LocationsArray = [];
+
         if (data.empty) {
             res.status(404).send('No Location record found');
         } else {
-            data.forEach(doc => {
-                const location = new Location(
-                    doc.id,
-                    doc.data().evlocation
-                );
-                LocationsArray.push(location);
-            });
-            res.send(LocationsArray);
+            
+            const locationsWithReservations = await Promise.all(
+                data.docs.map(async (doc) => {
+                    
+                    const reservationsRef = collection(doc.ref, 'Reservations');
+                    const reservationsSnapshot = await getDocs(reservationsRef);
+                    
+                    const reservationsArray = [];
+                    reservationsSnapshot.forEach(reservationDoc => {
+                        reservationsArray.push({
+                            id: reservationDoc.id,
+                            start: reservationDoc.data().start.toDate(),
+                            end: reservationDoc.data().end.toDate()
+                        });
+                    });
+
+                    const location = new Location(
+                        doc.id,
+                        doc.data().evlocation,
+                        reservationsArray 
+                    );
+                    return location;
+                })
+            );
+            
+            res.send(locationsWithReservations);
         }
     } catch (error) {
         res.status(400).send(error.message);

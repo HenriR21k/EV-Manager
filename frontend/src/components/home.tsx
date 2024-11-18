@@ -1,6 +1,6 @@
 const Home = () => {
   return (
-    <div className="container-fluid">
+    <div className="home-container">
       <h1>Electric Vehicle Management System</h1>
       <p>Welcome</p>
     </div>

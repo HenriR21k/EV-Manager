@@ -14,7 +14,7 @@
 .modal-content {
   background-color: white;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 20px;
   width: 300px;
   z-index: 1001;
   position: relative; 
@@ -37,4 +37,8 @@
 
 .autocomplete-control {
   margin-top: 10px;
+  margin-bottom: 20px;
+}
+.org-label {
+  margin-bottom: 0px;
 }

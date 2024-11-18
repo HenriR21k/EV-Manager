@@ -27,48 +27,50 @@ function Login() {
   };
 
   return (
-    <div className="auth-wrapper">
-      <div className="auth-inner">
-        <form onSubmit={handleSubmit}>
-          <h3>Login</h3>
+    <div className="login-container">
+      <div className="auth-wrapper">
+        <div className="auth-inner">
+          <form onSubmit={handleSubmit}>
+            <h3>Login</h3>
 
-          <div className="mb-3">
-            <label>Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              placeholder="Enter email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+            <div className="mb-3">
+              <label>Email address</label>
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
 
-          <div className="mb-3">
-            <label>Password</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
+            <div className="mb-3">
+              <label>Password</label>
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
 
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </div>
-          <div className="d-flex justify-content-between">
-            <p className="forgot-password" style={{ textAlign: "left" }}>
-              New user? <a href="/register">Register Here</a>
-            </p>
-            <p className="forgot-password">
-              <a href="/forgot">Forgot Password?</a>
-            </p>
-          </div>
-          <SignInwithGoogle />
-        </form>
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </div>
+            <div className="d-flex justify-content-between">
+              <p className="forgot-password" style={{ textAlign: "left" }}>
+                New user? <a href="/register">Register Here</a>
+              </p>
+              <p className="forgot-password">
+                <a href="/forgot">Forgot Password?</a>
+              </p>
+            </div>
+            <SignInwithGoogle />
+          </form>
+        </div>
       </div>
     </div>
   );

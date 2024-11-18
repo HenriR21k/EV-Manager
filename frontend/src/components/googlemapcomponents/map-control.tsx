@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { ControlPosition, MapControl } from '@vis.gl/react-google-maps';
-import { PlaceAutocompleteClassic } from './autocomplete-classic';
-import './custom-map-control.css';
+import React, { useState } from "react";
+import { ControlPosition, MapControl } from "@vis.gl/react-google-maps";
+import { PlaceAutocompleteClassic } from "./autocomplete-classic";
+import "./custom-map-control.css";
 
 type CustomAutocompleteControlProps = {
   controlPosition: ControlPosition;
@@ -13,7 +13,7 @@ export const CustomMapControl = ({
   onPlaceSelect,
 }: CustomAutocompleteControlProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [organisationName, setOrganisationName] = useState('');
+  const [organisationName, setOrganisationName] = useState("");
   const [selectedPlace, setSelectedPlace] = useState<any | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,29 +29,38 @@ export const CustomMapControl = ({
   return (
     <div>
       <MapControl position={controlPosition}>
-        <button onClick={() => setIsModalOpen(true)}>Open Form</button>
+        <button
+          className="btn btn-primary"
+          onClick={() => setIsModalOpen(true)}
+        >
+          Add Charging Point
+        </button>
       </MapControl>
 
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setIsModalOpen(false)}>&times;</span>
+            <span className="close" onClick={() => setIsModalOpen(false)}>
+              &times;
+            </span>
             <form onSubmit={handleSubmit}>
-              <label>
-                Organisation/Name:
-                <input 
-                  type="text" 
-                  value={organisationName} 
-                  onChange={(e) => setOrganisationName(e.target.value)} 
-                  required 
-                />
-              </label>
+              <label className="org-label">Organisation/Name:</label>
+              <input
+                type="text"
+                value={organisationName}
+                onChange={(e) => setOrganisationName(e.target.value)}
+                required
+              />
               <div className="autocomplete-control">
-                <PlaceAutocompleteClassic onPlaceSelect={(place) => {
-                  setSelectedPlace(place);
-                }} />
+                <PlaceAutocompleteClassic
+                  onPlaceSelect={(place) => {
+                    setSelectedPlace(place);
+                  }}
+                />
               </div>
-              <button type="submit">Submit</button>
+              <button className="btn btn-primary" type="submit">
+                Submit
+              </button>
             </form>
           </div>
         </div>

@@ -1,7 +1,8 @@
 class Location {
-    constructor(id, evlocation ) {
+    constructor(id, evlocation, reservations = [] ) {
             this.id = id;
             this.evlocation = evlocation;
+            this.reservations = reservations;
     }
 }
 

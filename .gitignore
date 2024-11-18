@@ -31,3 +31,4 @@ yarn-error.log*
 
 
 /frontend/src/config
+.prettierignore
