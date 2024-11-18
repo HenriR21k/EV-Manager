@@ -21,6 +21,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "./config/firebase";
 import Register from "./components/register";
+import { UserProvider } from "./components/userContext";
 
 function App() {
   const [user, setUser] = useState();
@@ -30,6 +31,7 @@ function App() {
     });
   });
   return (
+  <UserProvider>
     <Router>
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -131,6 +133,7 @@ function App() {
         </div>
       </div>
     </Router>
+  </UserProvider>
   );
 }
 

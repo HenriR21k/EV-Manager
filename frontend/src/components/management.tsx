@@ -2,92 +2,79 @@ import { useEffect, useState } from "react";
 import { APIProvider, ControlPosition, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
 import {CustomMapControl} from './googlemapcomponents/map-control';
 import MapHandler from "./googlemapcomponents/map-handler";
-import { db } from '../config/firebase';
 import useLoad from './api/useLoad';
-import { collection, getDocs, addDoc, GeoPoint } from 'firebase/firestore';
+import { API } from "./api/apiRequest";
+import { GeoPoint } from 'firebase/firestore';
 import configuration from "../config/configuration";
+import { useUser } from "./userContext";
 
 
 export default function Management() {
-
   const endpoint = `/Locations`
   const [locations, setLocations, loadingMessage, loadLocations] = useLoad(endpoint)
   const [selectedPlace, setSelectedPlace] = useState<null>(null);
-  const [markers, setMarkers] = useState<any[]>([]);
+  const { userId } = useUser();
 
-  useEffect(() => {
-    const fetchMarkers = async () => {
-      try {
-        const locationsCollection = collection(db, 'Locations');
-        const locationSnapshot = await getDocs(locationsCollection);
-        
-        const locationData = locationSnapshot.docs.map(doc => {
-          const evlocation = doc.data().evlocation;
-          
-          return {
-            lat: evlocation._lat,
-            lng: evlocation._long
-          };
-        });
-        
-        console.log("Fetched locations:", locationData);
-        setMarkers(locationData);
-        
-      } catch (error) {
-        console.error("Error fetching locations: ", error);
-      }
-    };
+  useEffect(() => {loadLocations(endpoint)}, []);
 
-    fetchMarkers();
-  }, []);
+  const handleLocationPost = async (newLocation: any) => {
+    const outcome = await API.post('Locations', newLocation);
+    console.log(outcome.response)
+    loadLocations(endpoint)
+  }
   
-  const addMarker = async (place: any) => {
+  const addLocation = async (place: any) => {
     if (place && place.geometry && place.geometry.location) {
-      const newMarker = {
+      const newLocation = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       };
 
-      setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
-      let testevlocation = new GeoPoint(newMarker.lat, newMarker.lng)
-      console.log("test: "+ JSON.stringify(testevlocation))
-      try {
-        const locationsCollection = collection(db, 'Locations');
-        await addDoc(locationsCollection, {
-          evlocation: new GeoPoint(newMarker.lat, newMarker.lng),
-          
-        });
-        console.log("New marker added to Firestore:", newMarker);
-      } catch (error) {
-        console.error("Error adding marker to Firestore:", error);
-      }
+      setLocations((prevLocation: any) => [...prevLocation, newLocation]);
+      let locationObj = {
+        evlocation: new GeoPoint(newLocation.lat, newLocation.lng),
+        createdByuid: userId
+        }
+      handleLocationPost(locationObj)
     }
   };
 
   return (
-    <APIProvider apiKey={configuration.API.API_KEY}>
-    <Map
-        style={{width: '100vw', height: '100vh'}}
-        defaultZoom={3}
-        defaultCenter={{lat: 22.54992, lng: 0}}
-        gestureHandling={'greedy'}
-        disableDefaultUI={true}
-        mapId={configuration.API.MAP_KEY}
-        >
-        {markers.map((marker, index) => (
-          <AdvancedMarker key={index} position={marker} />
-        ))}
+    <>
+      <div>User ID: {userId}</div>
+      <APIProvider apiKey={configuration.API.API_KEY}>
+      <Map
+          style={{width: '100vw', height: '100vh'}}
+          defaultZoom={3}
+          defaultCenter={{lat: 22.54992, lng: 0}}
+          gestureHandling={'greedy'}
+          disableDefaultUI={true}
+          mapId={configuration.API.MAP_KEY}
+          >
+        {locations && locations.length > 0 ? (
+          locations.map((location: any, index: number) => (
+            <AdvancedMarker key={index} 
+            position={{ 
+              lat: location.evlocation.evlocation.latitude, 
+              lng: location.evlocation.evlocation.longitude 
+            }}
+            />
+          ))
+          ) : (
+            <AdvancedMarker position={{ lat: 0, lng: 0 }} /> // Default marker or fallback
+          )}
       </Map>
-    <CustomMapControl
-        controlPosition={ControlPosition.TOP}
-        onPlaceSelect={(place) => {
-          setSelectedPlace(place);
-          addMarker(place);
-        }}
-        
-      />
-    <MapHandler place={selectedPlace} />
-    </APIProvider>
+      <CustomMapControl
+          controlPosition={ControlPosition.TOP}
+          onPlaceSelect={(place) => {
+            setSelectedPlace(place);
+            addLocation(place);
+          }}
+          
+        />
+      <MapHandler place={selectedPlace} />
+      </APIProvider>
+    </>
   );
 }
 

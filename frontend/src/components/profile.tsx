@@ -2,18 +2,22 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { User, sendEmailVerification } from "firebase/auth";
+import { useUser } from "./userContext";
 
 interface UserDetails {
   photo: string;
+  uid: string;
   firstName: string;
   email: string;
   lastName?: string;
 }
 
 function Profile() {
+  const { userId, setUserId } = useUser();
   const [isVerified, setIsVerified] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const [verificationSent, setVerificationSent] = useState(false);
+  
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user: User | null) => {
@@ -22,9 +26,11 @@ function Profile() {
         window.location.href = "/login";
         return;
       }
+      setUserId(user.uid);
       try {
         const docRef = doc(db, "Users", user.uid);
         const docSnap = await getDoc(docRef);
+        console.log("Userid: "+user.uid)
         if (docSnap.exists()) {
           setUserDetails(docSnap.data() as UserDetails);
           console.log(docSnap.data());
@@ -86,6 +92,7 @@ function Profile() {
             <div>
               <p>Email: {userDetails.email}</p>
               <p>First Name: {userDetails.firstName}</p>
+              <p>userid: {userDetails.uid}</p>
               {/* <p>Last Name: {userDetails.lastName}</p> */}
             </div>
             <div className="mb-3">

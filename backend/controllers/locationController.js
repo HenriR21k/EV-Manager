@@ -27,7 +27,7 @@ export const getAllLocations = async (req, res, next) => {
             data.forEach(doc => {
                 const location = new Location(
                     doc.id,
-                    doc.data().evlocation
+                    doc.data(),
                 );
                 LocationsArray.push(location);
             });
