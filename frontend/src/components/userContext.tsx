@@ -10,22 +10,22 @@ const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // Track auth initialization
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user: any) => {
       if (user) {
-        setUserId(user.uid); // Update userId when authenticated
+        setUserId(user.uid);
       } else {
-        setUserId(null); // Reset userId if logged out
+        setUserId(null);
       }
-      setLoading(false); // Auth state is initialized
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading screen until auth is initialized
+    return <div>Loading...</div>;
   }
 
   return (

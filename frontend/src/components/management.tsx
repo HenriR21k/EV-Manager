@@ -61,7 +61,7 @@ export default function Management() {
             />
           ))
           ) : (
-            <AdvancedMarker position={{ lat: 0, lng: 0 }} /> // Default marker or fallback
+            <AdvancedMarker position={{ lat: 0, lng: 0 }} />
           )}
       </Map>
       <CustomMapControl
