@@ -102,17 +102,14 @@ function Payments() {
     setChargeTransactionId(null);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = (e: any) => {
+    e.preventDefault();
     setCar({
       model: modelInput,
       energy_capacity: energyCapacityInput,
       current_energy: currentEnergyInput,
     });
-    console.log("Car details updated:", {
-      model: modelInput,
-      energy_capacity: energyCapacityInput,
-      current_energy: currentEnergyInput,
-    });
+    console.log(JSON.stringify(car));
   };
 
   return (
