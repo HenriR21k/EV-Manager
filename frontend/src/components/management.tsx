@@ -1,22 +1,15 @@
 import { useEffect, useState } from "react";
-import {
-  APIProvider,
-  ControlPosition,
-  Map,
-  AdvancedMarker,
-} from "@vis.gl/react-google-maps";
-import { CustomMapControl } from "./googlemapcomponents/map-control";
+import { APIProvider, ControlPosition, Map, AdvancedMarker } from "@vis.gl/react-google-maps";
+import {CustomMapControl} from './googlemapcomponents/map-control';
 import MapHandler from "./googlemapcomponents/map-handler";
-import { db } from "../config/firebase";
-import useLoad from "./api/useLoad";
-import { collection, getDocs, addDoc, GeoPoint } from "firebase/firestore";
+import useLoad from './api/useLoad';
+import { API } from "./api/apiRequest";
 import configuration from "../config/configuration";
-import Reservations from "./reservations";
+import { useUser } from "./userContext";
+import { collection, getDocs, addDoc, GeoPoint } from "firebase/firestore";
+import { db } from "../config/firebase";
 
-type MarkerLocation = {
-  lat: number;
-  lng: number;
-};
+
 
 type Reservation = {
   start: string;
@@ -33,11 +26,12 @@ type Location = {
 };
 
 export default function Management() {
-  const endpoint = `/Locations`;
-  const [locations, setLocations, loadingMessage, loadLocations] = useLoad(endpoint);
+  const endpoint = `/Locations`
+  const [locations, setLocations, loadingMessage, loadLocations] = useLoad(endpoint)
+
   const [selectedPlace, setSelectedPlace] = useState<null>(null);
-  const [markers, setMarkers] = useState<MarkerLocation[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState<MarkerLocation | null>(null);
+  const [markers, setMarkers] = useState("");
+  const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [markerReservations, setMarkerReservations] = useState<Reservation[]>([]);
 
   const [startDate, setStartDate] = useState("");
@@ -45,56 +39,47 @@ export default function Management() {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
 
-  useEffect(() => {
-    loadLocations();
-  }, []);
+  const { userId } = useUser();
 
-  useEffect(() => {
-    if (locations) {
-      const locationData = locations.map((location: Location) => {
-        const evlocation = location.evlocation;
+  useEffect(() => {loadLocations(endpoint)}, []);
 
-        return {
-          lat: evlocation.latitude,
-          lng: evlocation.longitude,
-        };
-      });
-
-      setMarkers(locationData);
-    } else console.log(loadingMessage);
-  }, [locations]);
-
-  const addMarker = async (place: any) => {
+  const addLocation = async (place: any) => {
+    
+    console.log("does it reach")
     if (place && place.geometry && place.geometry.location) {
-      const newMarker = {
+      const newLocation = {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       };
 
-      setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
-      let testevlocation = new GeoPoint(newMarker.lat, newMarker.lng);
-      console.log("test: " + JSON.stringify(testevlocation));
-      try {
-        const locationsCollection = collection(db, "Locations");
 
-        await addDoc(locationsCollection, {
-          evlocation: new GeoPoint(newMarker.lat, newMarker.lng),
-        });
-
-        console.log("New marker added to Firestore:", newMarker);
-      } catch (error) {
-        console.error("Error adding marker to Firestore:", error);
-      }
+      // setLocations((prevLocation: any) => [...prevLocation, newLocation]);
+      
+      let locationObj = {
+        evlocation: new GeoPoint(newLocation.lat, newLocation.lng),
+        createdByuid: userId
+        }
+     
+      handleLocationPost(locationObj)
     }
   };
 
-  const handleMarkerClick = (marker: MarkerLocation, index: number) => {
-    setSelectedMarker(marker);
+  const handleLocationPost = async (newLocation: any) => {
+    const outcome = await API.post('/Locations', newLocation);
+    console.log(outcome.response)
+    loadLocations(endpoint)
+  }
+
+  const handleMarkerClick = (marker: Location, index: number) => {
+
+    setSelectedMarker(marker.evlocation);
     
     const matchingLocation = locations.find((location: Location) => 
-      location.evlocation.latitude === marker.lat && 
-      location.evlocation.longitude === marker.lng
+      location.evlocation.latitude === marker.evlocation.latitude && 
+      location.evlocation.longitude === marker.evlocation.longitude
     );
+
+    console.log("This one"+JSON.stringify(matchingLocation))
   
     if (matchingLocation) {
       const reservations = matchingLocation.reservations.map((reservation: Reservation) => {
@@ -122,9 +107,11 @@ export default function Management() {
       console.log("No matching location found");
     }
   };
+
+  //must change to use useForm
   const handleReservation = async (
     event: React.FormEvent<HTMLFormElement>,
-    selectedMarker: MarkerLocation,
+    selectedMarker: any,
     startDate: string,
     startTime: string,
     endDate: string,
@@ -138,6 +125,7 @@ export default function Management() {
 
     const startDateTime = new Date(`${startDate}T${startTime}`);
     const endDateTime = new Date(`${endDate}T${endTime}`);
+    
 
     if (startDateTime >= endDateTime) {
       console.error("Start time must be before end time.");
@@ -146,29 +134,35 @@ export default function Management() {
 
     try {
       const matchingLocation = locations.find((location: Location) =>
-        location.evlocation.latitude === selectedMarker.lat &&
-        location.evlocation.longitude === selectedMarker.lng
+        location.evlocation.latitude === selectedMarker.latitude &&
+        location.evlocation.longitude === selectedMarker.longitude
       );
 
-      if (matchingLocation) {
-        const reservationsCollectionRef = collection(db, "Locations",matchingLocation.id,"Reservations");
-        await addDoc(reservationsCollectionRef, {
-          start: startDateTime,
-          end: endDateTime,
-        });
-        
-        console.log("Reservation added successfully.");
-      } else {
-        console.error("No matching location found for this marker.");
-      }
+      handleReservationPost(startDateTime, endDateTime, matchingLocation.id, userId)
+      
     } catch (error) {
       console.error("Error adding reservation:", error);
     }
   };
 
+  const handleReservationPost = async (startDateTime: any, endDateTime:any, matchingLocation: any, userID: any) => {
+    let reservationsObj = {
+      startDateTime: startDateTime,
+      endDateTime: endDateTime,
+      matchingLocation: matchingLocation,
+      userID: userID
+    }
+    console.log(JSON.stringify(reservationsObj))
+
+    const outcome = await API.post(`/Location/${matchingLocation}/Reservations`, reservationsObj);
+    console.log(outcome.response)
+    loadLocations(endpoint)
+  }
+
   return (
     <div className="management-container">
       <h1>Manage EV points</h1>
+      <div>User ID: {userId}</div>
       <div className="map-container">
         <APIProvider apiKey={configuration.API.API_KEY}>
           <Map
@@ -179,19 +173,23 @@ export default function Management() {
             disableDefaultUI={true}
             mapId={configuration.API.MAP_KEY}
           >
-            {markers.map((marker, index) => (
-              <AdvancedMarker
+            {locations ? (
+              locations.map((location: any, index: number) => (
+                <AdvancedMarker
                 key={index}
-                position={marker}
-                onClick={() => handleMarkerClick(marker, index)}
+                position={{lat: location.evlocation.latitude, lng: location.evlocation.longitude}}
+                onClick={() => handleMarkerClick(location, index)}
               />
-            ))}
+              ))
+              ) : (
+                <AdvancedMarker position={{ lat: 0, lng: 0 }} />
+              )}
           </Map>
           <CustomMapControl
             controlPosition={ControlPosition.TOP}
             onPlaceSelect={(place) => {
               setSelectedPlace(place);
-              addMarker(place);
+              addLocation(place);
             }}
           />
           <MapHandler place={selectedPlace} />
@@ -203,8 +201,8 @@ export default function Management() {
           <>
           <h2>Selected Location Details</h2>
           <ul className="locations-list">
-            <li className="location-item">Latitude: {selectedMarker.lat}</li>
-            <li className="location-item">Longitude: {selectedMarker.lng}</li>
+            <li className="location-item">Latitude: {selectedMarker.latitude} </li>
+            <li className="location-item">Longitude: {selectedMarker.longitude} </li>
           </ul>
           {markerReservations.length > 0 ? (
             <div className="reservations">
@@ -260,3 +258,5 @@ export default function Management() {
     </div>
   );
 }
+
+

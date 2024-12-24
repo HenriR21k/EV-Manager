@@ -21,6 +21,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { auth } from "./config/firebase";
 import Register from "./components/register";
+import { UserProvider } from "./components/userContext";
 
 function App() {
   const [user, setUser] = useState();
@@ -30,6 +31,7 @@ function App() {
     });
   });
   return (
+  <UserProvider>
     <Router>
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -50,7 +52,7 @@ function App() {
               <span className="navbar-toggler-icon"></span>
             </button>
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div className="navbar-nav">
+              <div className="navbar-nav me-auto">
                 <NavLink
                   className={({ isActive }) =>
                     isActive ? "nav-link active" : "nav-link"
@@ -109,7 +111,7 @@ function App() {
           </div>
         </nav>
 
-        <div>
+        <div id="main">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Reservations" element={<Reservations />} />
@@ -131,6 +133,7 @@ function App() {
         </div>
       </div>
     </Router>
+  </UserProvider>
   );
 }
 

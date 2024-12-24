@@ -16,6 +16,28 @@ export const addLocation = async (req, res, next) => {
     }
 }
 
+export const addReservation = async (req, res, next) => {
+    // Receive object
+    // Receive object ID
+    // 
+    console.log(req.body.userID)
+    
+    try {
+        
+        const reservationsCollectionRef = collection(db, "Locations",req.body.matchingLocation,"Reservations");
+        await addDoc(reservationsCollectionRef, {
+        start: req.body.startDateTime,
+        end: req.body.endDateTime,
+        userID: req.body.userID
+        });
+
+        res.send("Reservation added successfully.");
+
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
 export const getAllLocations = async (req, res, next) => {
     try {
         const Locations = collection(db, 'Locations');
@@ -35,8 +57,9 @@ export const getAllLocations = async (req, res, next) => {
                     reservationsSnapshot.forEach(reservationDoc => {
                         reservationsArray.push({
                             id: reservationDoc.id,
-                            start: reservationDoc.data().start.toDate(),
-                            end: reservationDoc.data().end.toDate()
+                            start: reservationDoc.data().start,
+                            end: reservationDoc.data().end,
+                            user: reservationDoc.data().userID
                         });
                     });
 
@@ -55,6 +78,7 @@ export const getAllLocations = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+
 
 export const getLocation = async (req, res, next) => {
     try {
