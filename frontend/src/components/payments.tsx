@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { db2 } from "../config/firebase";
 import { ref, onValue, query, orderByKey, equalTo } from 'firebase/database';
+import { useLocation } from "react-router-dom";
 
 interface Car {
   model: string;
@@ -9,6 +10,9 @@ interface Car {
 }
 
 function Payments() {
+  const location = useLocation();
+  const reservation = location.state;
+
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [car, setCar] = useState<Car>({
@@ -116,6 +120,26 @@ function Payments() {
     <div className="payments-container">
       <div className="auth-wrapper">
         <div className="auth-inner">
+        {reservation ? (
+            <ul className="reservations-list">
+              <li className="reservation-item">
+                <strong>Location:</strong>{" "}
+                {reservation.evlocation.latitude},{" "}
+                {reservation.evlocation.longitude}
+              </li>
+              <li className="reservation-item">
+                <strong>Start:</strong>{" "}
+                {new Date(reservation.start).toLocaleString()}
+              </li>
+              <li className="reservation-item">
+                <strong>End:</strong>{" "}
+                {new Date(reservation.end).toLocaleString()}
+              </li>
+            </ul>
+          ) : (
+            <p>No reservation details provided.</p>
+          )}
+
           <form className="mb-3" onSubmit={handleConfirm}>
             <h3> Input Car Details</h3>
 

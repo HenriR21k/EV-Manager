@@ -38,6 +38,53 @@ export const addReservation = async (req, res, next) => {
     }
 }
 
+export const getUserReservations = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        const Locations = collection(db, 'Locations');
+        const data = await getDocs(Locations);
+
+        if (data.empty) {
+            res.status(404).send('No Location record found');
+        } else {
+            const userReservations = await Promise.all(
+                data.docs.map(async (doc) => {
+                    const reservationsRef = collection(doc.ref, 'Reservations');
+                    const reservationsSnapshot = await getDocs(reservationsRef);
+                    
+                    const reservationsArray = [];
+                    reservationsSnapshot.forEach(reservationDoc => {
+                        if (reservationDoc.data().userID === userId) {
+                            reservationsArray.push({
+                                id: reservationDoc.id,
+                                locationId: doc.id,
+                                evlocation: doc.data().evlocation,
+                                start: reservationDoc.data().start,
+                                end: reservationDoc.data().end,
+                                user: reservationDoc.data().userID
+                            });
+                        }
+                    });
+                    
+                    return reservationsArray;
+                })
+            );
+            // Flatten the array of arrays and remove empty arrays
+            const flattenedReservations = userReservations
+                .flat()
+                .filter(reservation => reservation !== null);
+
+            if (flattenedReservations.length === 0) {
+                res.status(404).send('No reservations found for this user');
+            } else {
+                res.send(flattenedReservations);
+            }
+        }
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
 export const getAllLocations = async (req, res, next) => {
     try {
         const Locations = collection(db, 'Locations');

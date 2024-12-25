@@ -77,14 +77,6 @@ function App() {
                 >
                   Reservations
                 </NavLink>
-                <NavLink
-                  className={({ isActive }) =>
-                    isActive ? "nav-link active" : "nav-link"
-                  }
-                  to="/Payments"
-                >
-                  Payments
-                </NavLink>
               </div>
               <div className="navbar-nav">
                 {user ? (
