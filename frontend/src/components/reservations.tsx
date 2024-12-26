@@ -26,11 +26,11 @@ function Reservations() {
   }, [userId]);
   
   const handleReservationClick = (reservation: any) => {
-    navigate("/payments", { state: reservation });
+    navigate("/charging", { state: reservation });
   };
 
   return (
-    <div className="payments-container">
+    <div className="reservations-container">
       <div className="auth-wrapper">
         <div className="auth-inner">
           {userReservations.length > 0 ? (

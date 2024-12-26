@@ -10,7 +10,7 @@ interface Car {
   current_energy: number;
 }
 
-function Payments() {
+function Charging() {
   const location = useLocation();
   const reservation = location.state;
 
@@ -27,6 +27,10 @@ function Payments() {
   const [energyCapacityInput, setEnergyCapacityInput] = useState<number>(car.energy_capacity);
   const [currentEnergyInput, setCurrentEnergyInput] = useState<number>(car.current_energy);
 
+  const [initialEnergy, setInitialEnergy] = useState<number>(car.current_energy);
+  const [energyUsed, setEnergyUsed] = useState<number>(0);
+
+
   const initializeWebSocket = (sendNow: boolean = false) => {
     const socket = new WebSocket("ws://localhost:8081");
 
@@ -37,6 +41,7 @@ function Payments() {
       if (sendNow) {
         const transactionId = Date.now().toString();
         setChargeTransactionId(transactionId);
+        setInitialEnergy(car.current_energy);
         socket.send(JSON.stringify({ type: "charge", car: { ...car, chargeTransaction: transactionId } }));
         console.log("Message sent to server with transaction ID:", transactionId);
         fetchCarData(transactionId);
@@ -79,7 +84,9 @@ function Payments() {
           energy_capacity: carData.capacity,
           current_energy: carData.energy,
         });
+        setEnergyUsed(carData.energy - initialEnergy)
         console.log("Car data updated:", data[transactionId]);
+        console.log("Energy used:", carData.energy - initialEnergy, "kWh")
       }
     });
   };
@@ -99,6 +106,7 @@ function Payments() {
     if (ws && ws.readyState === WebSocket.OPEN) {
       const transactionId = Date.now().toString();
       setChargeTransactionId(transactionId);
+      setInitialEnergy(car.current_energy);
       ws.send(JSON.stringify({ type: "charge", car: { ...car, chargeTransaction: transactionId } }));
       console.log("Message sent to server with transaction ID:", transactionId);
       fetchCarData(transactionId);
@@ -129,7 +137,7 @@ function Payments() {
   };
 
   return (
-    <div className="payments-container">
+    <div className="charging-container">
       <div className="auth-wrapper">
         <div className="auth-inner">
         {reservation ? (
@@ -213,4 +221,4 @@ function Payments() {
   );
 }
 
-export default Payments;
+export default Charging;

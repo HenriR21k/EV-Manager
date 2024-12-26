@@ -12,7 +12,7 @@ import {
 import Home from "./components/home";
 import Login from "./components/login";
 import Reservations from "./components/reservations";
-import Payments from "./components/payments";
+import Charging from "./components/charging";
 import Management from "./components/management";
 import Profile from "./components/profile";
 import Forgot from "./components/forgot";
@@ -107,7 +107,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Reservations" element={<Reservations />} />
-            <Route path="/Payments" element={<Payments />} />
+            <Route path="/Charging" element={<Charging />} />
             <Route path="/Forgot" element={<Forgot />} />
             <Route path="/Management" element={<Management />} />
             <Route
