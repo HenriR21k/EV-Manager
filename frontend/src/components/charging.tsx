@@ -3,6 +3,8 @@ import { db2 } from "../config/firebase";
 import { ref, onValue, query, orderByKey, equalTo } from 'firebase/database';
 import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { API } from "./api/apiRequest";
+import { useUser } from "./userContext";
 
 interface Car {
   model: string;
@@ -30,6 +32,7 @@ function Charging() {
   const [initialEnergy, setInitialEnergy] = useState<number>(car.current_energy);
   const [energyUsed, setEnergyUsed] = useState<number>(0);
 
+  const { userId } = useUser();
 
   const initializeWebSocket = (sendNow: boolean = false) => {
     const socket = new WebSocket("ws://localhost:8081");
@@ -41,7 +44,6 @@ function Charging() {
       if (sendNow) {
         const transactionId = Date.now().toString();
         setChargeTransactionId(transactionId);
-        setInitialEnergy(car.current_energy);
         socket.send(JSON.stringify({ type: "charge", car: { ...car, chargeTransaction: transactionId } }));
         console.log("Message sent to server with transaction ID:", transactionId);
         fetchCarData(transactionId);
@@ -85,8 +87,9 @@ function Charging() {
           current_energy: carData.energy,
         });
         setEnergyUsed(carData.energy - initialEnergy)
+        console.log(carData.energy - initialEnergy)
         console.log("Car data updated:", data[transactionId]);
-        console.log("Energy used:", carData.energy - initialEnergy, "kWh")
+        console.log("Energy used:", energyUsed, "kWh")
       }
     });
   };
@@ -106,7 +109,7 @@ function Charging() {
     if (ws && ws.readyState === WebSocket.OPEN) {
       const transactionId = Date.now().toString();
       setChargeTransactionId(transactionId);
-      setInitialEnergy(car.current_energy);
+      
       ws.send(JSON.stringify({ type: "charge", car: { ...car, chargeTransaction: transactionId } }));
       console.log("Message sent to server with transaction ID:", transactionId);
       fetchCarData(transactionId);
@@ -115,11 +118,31 @@ function Charging() {
     }
   };
 
+  const handleEnergyUpdate = async () => {
+    try {
+      const energyData = {
+        additionalEnergyUsed: energyUsed
+      };
+
+      await API.put(`/user/${userId}/Energy`, energyData);
+      
+
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
+
   const handleDisconnect = () => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "Stop", null: {} }));
       ws.close();
       console.log("Disconnected from WebSocket server");
+      console.log(energyUsed)
+
+      if (energyUsed>0) {
+        handleEnergyUpdate();
+      }
     }
     setWs(null);
     setIsConnected(false);
@@ -134,6 +157,7 @@ function Charging() {
       current_energy: currentEnergyInput,
     });
     console.log(JSON.stringify(car));
+    setInitialEnergy(car.current_energy);
   };
 
   return (

@@ -171,3 +171,38 @@ export const deleteLocation = async (req, res, next) => {
         res.status(400).send(error.message);
     }
 }
+
+export const updateEnergyUsed = async (req, res, next) => {
+    console.log(req.body)
+    try {
+        const userId = req.params.userId;
+        const { additionalEnergyUsed } = req.body;
+
+        if (!additionalEnergyUsed || additionalEnergyUsed < 0) {
+            res.status(400).send("Invalid energy amount");
+            return;
+        }
+
+        const userDocRef = doc(db, 'Users', userId);
+        const userDoc = await getDoc(userDocRef);
+
+        if (!userDoc.exists()) {
+            res.status(404).send("User not found");
+            return;
+        }
+
+        const currentEnergyUsed = userDoc.data().energyUsed || 0;
+        const currentCredit = userDoc.data().credit || 0;
+        const updatedEnergyUsed = currentEnergyUsed + additionalEnergyUsed;
+        const updatedCredit = currentCredit + additionalEnergyUsed;
+
+        await updateDoc(userDocRef, {
+            energyUsed: updatedEnergyUsed,
+            credit: updatedCredit,
+        });
+
+        res.send(`Energy used updated successfully: ${updatedEnergyUsed}`);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
