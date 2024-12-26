@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db2 } from "../config/firebase";
 import { ref, onValue, query, orderByKey, equalTo } from 'firebase/database';
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 interface Car {
   model: string;
@@ -84,6 +85,17 @@ function Payments() {
   };
 
   const handleConnectAndSend = () => {
+    const now = new Date();
+    const reservationStart = new Date(reservation.start);
+    const reservationEnd = new Date(reservation.end);
+    console.log(reservationStart,reservationEnd,now);
+    if (now < reservationStart || now > reservationEnd) {
+      toast.error("You can only connect and send within the reservation time", {
+        position: "bottom-center",
+      });
+      return;
+    }
+
     if (ws && ws.readyState === WebSocket.OPEN) {
       const transactionId = Date.now().toString();
       setChargeTransactionId(transactionId);
