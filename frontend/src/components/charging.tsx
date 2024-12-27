@@ -167,16 +167,21 @@ function Charging() {
         {reservation ? (
             <ul className="reservations-list">
               <li className="reservation-item">
-                <strong>Location:</strong>{" "}
+                Location:{" "}
                 {reservation.evlocation.latitude},{" "}
                 {reservation.evlocation.longitude}
               </li>
               <li className="reservation-item">
-                <strong>Start:</strong>{" "}
+                Location:{" "}
+                {reservation.address},{" "}
+                
+              </li>
+              <li className="reservation-item">
+                Start:{" "}
                 {new Date(reservation.start).toLocaleString()}
               </li>
               <li className="reservation-item">
-                <strong>End:</strong>{" "}
+                End:{" "}
                 {new Date(reservation.end).toLocaleString()}
               </li>
             </ul>

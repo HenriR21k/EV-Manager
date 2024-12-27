@@ -17,21 +17,46 @@ export const addLocation = async (req, res, next) => {
 }
 
 export const addReservation = async (req, res, next) => {
-    // Receive object
-    // Receive object ID
-    // 
+
     console.log(req.body.userID)
+
+    
     
     try {
-        
-        const reservationsCollectionRef = collection(db, "Locations",req.body.matchingLocation,"Reservations");
-        await addDoc(reservationsCollectionRef, {
-        start: req.body.startDateTime,
-        end: req.body.endDateTime,
-        userID: req.body.userID
+        const { matchingLocation, startDateTime, endDateTime, userID } = req.body;
+
+        const reservationsCollectionRef = collection(db, "Locations", matchingLocation, "Reservations");
+        const reservationsSnapshot = await getDocs(reservationsCollectionRef);
+        let hasOverlap = false;
+        reservationsSnapshot.forEach(reservationDoc => {
+            const existingStart = reservationDoc.data().start;
+            const existingEnd = reservationDoc.data().end;
+            
+            if ((startDateTime >= existingStart && startDateTime < existingEnd) ||
+                (endDateTime > existingStart && endDateTime <= existingEnd) ||
+                (startDateTime <= existingStart && endDateTime >= existingEnd)) {
+                hasOverlap = true;
+            }
         });
 
-        res.send("Reservation added successfully.");
+        if (hasOverlap) {
+            res.json({
+                success: false,
+                message: "This time slot is already reserved. Please choose a different time."
+            });
+            return;
+        }
+
+        await addDoc(reservationsCollectionRef, {
+            start: startDateTime,
+            end: endDateTime,
+            userID: userID
+        });
+
+        res.json({
+            success: true,
+            message: "Reservation added successfully."
+        });
 
     } catch (error) {
         res.status(400).send(error.message);
