@@ -11,7 +11,6 @@ import { db } from "../config/firebase";
 import { toast } from "react-toastify";
 
 
-
 type Reservation = {
   start: string;
   end: string;
@@ -92,12 +91,12 @@ export default function Management() {
     loadLocations(endpoint)
   }
 
-  const handleMarkerClick = (marker: Location, index: number) => {
+  const handleMarkerClick = (marker: any, index: number) => {
 
     setSelectedMarker(marker.evlocation);
-    getAddress(marker.evlocation.latitude,marker.evlocation.longitude)
+    getAddress(marker.evlocation.evlocation.latitude,marker.evlocation.evlocation.longitude)
     
-    const matchingLocation = locations.find((location: Location) => 
+    const matchingLocation = locations.find((location: any) => 
       location.evlocation.latitude === marker.evlocation.latitude && 
       location.evlocation.longitude === marker.evlocation.longitude
     );

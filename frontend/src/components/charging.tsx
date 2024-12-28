@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { API } from "./api/apiRequest";
 import { useUser } from "./userContext";
+import { getAnalytics, logEvent } from 'firebase/analytics';
 
 interface Car {
   model: string;
@@ -19,9 +20,9 @@ function Charging() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [car, setCar] = useState<Car>({
-    model: "EV Model X",
-    energy_capacity: 11,
-    current_energy: 5,
+    model: "EV Model",
+    energy_capacity: 0,
+    current_energy: 0,
   });
   const [chargeTransactionId, setChargeTransactionId] = useState<any | null>(null);
 
@@ -32,7 +33,11 @@ function Charging() {
   const [initialEnergy, setInitialEnergy] = useState<number>(car.current_energy);
   const [energyUsed, setEnergyUsed] = useState<number>(0);
 
+  const [isConfirmed, setIsConfirmed] = useState<boolean>(false);
+
   const { userId } = useUser();
+
+  const analytics = getAnalytics();
 
   const initializeWebSocket = (sendNow: boolean = false) => {
     const socket = new WebSocket("ws://localhost:8081");
@@ -42,11 +47,21 @@ function Charging() {
       setIsConnected(true);
 
       if (sendNow) {
-        const transactionId = Date.now().toString();
+        let temp = Date.now()
+        const transactionId = temp.toString();
+        const timestamp = new Date(temp).toISOString();
         setChargeTransactionId(transactionId);
         socket.send(JSON.stringify({ type: "charge", car: { ...car, chargeTransaction: transactionId } }));
         console.log("Message sent to server with transaction ID:", transactionId);
         fetchCarData(transactionId);
+
+        logEvent(analytics, "charging_session_started", {
+          car_model: car.model,
+          energy_capacity: car.energy_capacity,
+          initial_energy: car.current_energy,
+          transaction_id: transactionId,
+          timestamp: timestamp,
+        });
       }
     };
 
@@ -89,7 +104,6 @@ function Charging() {
         setEnergyUsed(carData.energy - initialEnergy)
         console.log(carData.energy - initialEnergy)
         console.log("Car data updated:", data[transactionId]);
-        console.log("Energy used:", energyUsed, "kWh")
       }
     });
   };
@@ -138,12 +152,25 @@ function Charging() {
       ws.send(JSON.stringify({ type: "Stop", null: {} }));
       ws.close();
       console.log("Disconnected from WebSocket server");
-      console.log(energyUsed)
+      console.log("energy used: "+energyUsed)
+
+      const disconnectTime = new Date();
 
       if (energyUsed>0) {
         handleEnergyUpdate();
       }
+      logEvent(analytics, "charging_session_ended", {
+        car_model: car.model,
+        energy_capacity: car.energy_capacity,
+        initial_energy: initialEnergy,
+        final_energy: car.current_energy,
+        energy_used: energyUsed,
+        transaction_id: chargeTransactionId,
+        timestamp: disconnectTime.toISOString(),
+      });
     }
+    setEnergyUsed(0);
+    setInitialEnergy(car.current_energy)
     setWs(null);
     setIsConnected(false);
     setChargeTransactionId(null);
@@ -158,6 +185,7 @@ function Charging() {
     });
     console.log(JSON.stringify(car));
     setInitialEnergy(car.current_energy);
+    setIsConfirmed(true);
   };
 
   return (
@@ -227,23 +255,27 @@ function Charging() {
                 </button>
             </div>
           </form>
-          <div className="car-details">
-            <h3>Car Details</h3>
-            <ul className="car-list">
-              <li className="car-item">Model: {car.model}</li>
-              <li className="car-item">Energy Capacity: {car.energy_capacity} kWh</li>
-              <li className="car-item">Current Energy: {car.current_energy} kWh</li>
-            </ul>
-            <div className="d-grid">
-              {!isConnected && (
-              <button type="submit" className="btn btn-primary" onClick={handleConnectAndSend}>Connect and Send</button>
-              )}
+          {isConfirmed ? (
+            <div className="car-details">
+              <h3>Car Details</h3>
+              <ul className="car-list">
+                <li className="car-item">Model: {car.model}</li>
+                <li className="car-item">Energy Capacity: {car.energy_capacity} kWh</li>
+                <li className="car-item">Current Energy: {car.current_energy} kWh</li>
+              </ul>
+              <div className="d-grid">
+                {!isConnected && (
+                <button type="submit" className="btn btn-primary" onClick={handleConnectAndSend}>Connect and Send</button>
+                )}
 
-              {isConnected && (
-                <button type="submit" className="btn btn-primary" onClick={handleDisconnect}>Disconnect</button>
-              )}
+                {isConnected && (
+                  <button type="submit" className="btn btn-primary" onClick={handleDisconnect}>Disconnect</button>
+                )}
+              </div>
             </div>
-          </div>
+            ) : (
+              <p></p>
+            )}
         </div>
       </div>
     </div>
