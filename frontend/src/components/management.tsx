@@ -8,6 +8,7 @@ import configuration from "../config/configuration";
 import { useUser } from "./userContext";
 import { collection, getDocs, addDoc, GeoPoint } from "firebase/firestore";
 import { db } from "../config/firebase";
+import { toast } from "react-toastify";
 
 
 
@@ -41,7 +42,29 @@ export default function Management() {
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
 
+  const [address, setAddress] = useState("");
+
   const { userId } = useUser();
+
+  const API_KEY = configuration.API.API_KEY;
+  
+  const getAddress = async (latitude:any, longitude:any) => {
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`
+      );
+      
+      const data = await response.json();
+      
+      if (data.status === 'OK' && data.results) {
+        setAddress(data.results[0].formatted_address);
+      } else {
+        setAddress('Address not found');
+      }
+    } catch (error) {
+      setAddress('Unable to load address' + error);
+    }
+  };
 
   useEffect(() => {loadLocations(endpoint)}, []);
 
@@ -72,6 +95,7 @@ export default function Management() {
   const handleMarkerClick = (marker: Location, index: number) => {
 
     setSelectedMarker(marker.evlocation);
+    getAddress(marker.evlocation.latitude,marker.evlocation.longitude)
     
     const matchingLocation = locations.find((location: Location) => 
       location.evlocation.latitude === marker.evlocation.latitude && 
@@ -96,7 +120,7 @@ export default function Management() {
             day: "numeric",
             hour: "2-digit",
             minute: "2-digit",
-          })
+          }),          
         };
       });
   
@@ -124,10 +148,27 @@ export default function Management() {
 
     const startDateTime = new Date(`${startDate}T${startTime}`);
     const endDateTime = new Date(`${endDate}T${endTime}`);
-    
+    const now = new Date();
+
+    if (startDateTime < now) {
+      toast.error("Cannot make reservations in the past", {
+        position: "bottom-center",
+      });
+      return;
+    }
+
+    const duration = (endDateTime.getTime() - startDateTime.getTime()) / (1000 * 60 * 60);
+    if (duration > 1) {
+        toast.error("Maximum reservation time is 1 hour", {
+            position: "bottom-center",
+        });
+        return;
+    }
 
     if (startDateTime >= endDateTime) {
-      console.error("Start time must be before end time.");
+      toast.error("Start time must be before end time.", {
+              position: "bottom-center",
+            });
       return;
     }
 
@@ -154,7 +195,16 @@ export default function Management() {
     console.log(JSON.stringify(reservationsObj))
 
     const outcome = await API.post(`/Location/${matchingLocation}/Reservations`, reservationsObj);
-    console.log(outcome.response)
+    
+    if (outcome.result.success) {
+      toast.success(outcome.result.message, {
+        position: "bottom-center"
+      });
+    } else {
+      toast.error(outcome.result.message, {
+        position: "bottom-center"
+      });
+    }
     loadLocations(endpoint)
   }
 
@@ -218,6 +268,7 @@ export default function Management() {
           <ul className="locations-list">
             <li className="location-item">Latitude: {selectedMarker.evlocation.latitude} </li>
             <li className="location-item">Longitude: {selectedMarker.evlocation.longitude} </li>
+            <li className="location-item">Address: {address} </li>
           </ul>
           {markerReservations.length > 0 ? (
             <div className="reservations">
@@ -241,23 +292,23 @@ export default function Management() {
               <div>
                 <label>
                   Start Date:
-                  <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+                  <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
                 </label>
               </div>
               <div>
                 <label>
                   Start Time:
-                  <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)}/>
+                  <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required/>
                 </label>
               </div>
               <label>
                 End Date:
-                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)}/>
+                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required/>
               </label>
               <div>
                 <label>
                   End Time:
-                  <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)}/>
+                  <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required/>
                 </label>
               </div>
             </div>
