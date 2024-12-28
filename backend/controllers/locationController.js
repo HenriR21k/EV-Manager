@@ -4,6 +4,8 @@ import { collection, doc, setDoc, getDocs, getDoc, updateDoc, deleteDoc, GeoPoin
 
 
 export const addLocation = async (req, res, next) => {
+
+    console.log("test"+JSON.stringify(req.body))
     try {
         const { evlocation, ...otherData } = req.body;
         const geoPoint = new GeoPoint(evlocation.latitude, evlocation.longitude);
@@ -137,8 +139,10 @@ export const getAllLocations = async (req, res, next) => {
 
                     const location = new Location(
                         doc.id,
-                        doc.data().evlocation,
-                        reservationsArray 
+                        doc.data(),
+                        reservationsArray,
+                        
+                         
                     );
                     return location;
                 })

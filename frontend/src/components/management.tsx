@@ -23,6 +23,7 @@ type Location = {
     latitude: number;
     longitude: number;
   };
+  createdByuid: string;
   reservations: Reservation[];
 };
 
@@ -34,6 +35,7 @@ export default function Management() {
   const [markers, setMarkers] = useState("");
   const [selectedMarker, setSelectedMarker] = useState<any>(null);
   const [markerReservations, setMarkerReservations] = useState<Reservation[]>([]);
+  
 
   const [startDate, setStartDate] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -74,9 +76,6 @@ export default function Management() {
         lat: place.geometry.location.lat(),
         lng: place.geometry.location.lng(),
       };
-
-
-      // setLocations((prevLocation: any) => [...prevLocation, newLocation]);
       
       let locationObj = {
         evlocation: new GeoPoint(newLocation.lat, newLocation.lng),
@@ -209,6 +208,20 @@ export default function Management() {
     loadLocations(endpoint)
   }
 
+  
+
+  const handleDeleteLocation = async (locationId: string) => {
+    try {
+      const outcome = await API.delete(`/Location/${locationId}`);
+      console.log(outcome.response);
+      loadLocations(endpoint); // Refresh the list after deletion
+    } catch (error) {
+      console.error("Error deleting location:", error);
+    }
+  };
+  
+ 
+
   return (
     <div className="management-container">
       <h1>Manage EV points</h1>
@@ -227,7 +240,7 @@ export default function Management() {
               locations.map((location: any, index: number) => (
                 <AdvancedMarker
                 key={index}
-                position={{lat: location.evlocation.latitude, lng: location.evlocation.longitude}}
+                position={{lat: location.evlocation.evlocation.latitude, lng: location.evlocation.evlocation.longitude}}
                 onClick={() => handleMarkerClick(location, index)}
               />
               ))
@@ -241,6 +254,8 @@ export default function Management() {
               setSelectedPlace(place);
               addLocation(place);
             }}
+            userLocations={locations}
+            onDeleteLocation={handleDeleteLocation}
           />
           <MapHandler place={selectedPlace} />
         </APIProvider>
@@ -251,8 +266,8 @@ export default function Management() {
           <>
           <h2>Selected Location Details</h2>
           <ul className="locations-list">
-            <li className="location-item">Latitude: {selectedMarker.latitude} </li>
-            <li className="location-item">Longitude: {selectedMarker.longitude} </li>
+            <li className="location-item">Latitude: {selectedMarker.evlocation.latitude} </li>
+            <li className="location-item">Longitude: {selectedMarker.evlocation.longitude} </li>
             <li className="location-item">Address: {address} </li>
           </ul>
           {markerReservations.length > 0 ? (
