@@ -84,29 +84,29 @@ export const CustomMapControl = ({controlPosition,onPlaceSelect, userLocations, 
           </span>
           <h2>Your Locations</h2>
           <ul>
-          {userLocations && userLocations.length > 0 ? (
+            {userLocations && userLocations.length > 0 ? (
                 userLocations
-                  .filter((location: any) => location.evlocation.createdByuid === userId)
-                  .map((location: any) => (
-                <li key={location.id}>
-                    <p>
-                      Latitude: {location.evlocation.evlocation.latitude}, Longitude:{" "}
-                      {location.evlocation.evlocation.longitude}
-                    </p>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => onDeleteLocation(location.id)}
-                  >
-                   Delete
-                  </button>
-                  </li>
-                    ))
-                  ) : (
-                    <p>No locations available.</p>
-                    )}
-                  </ul>
-                  </div>
-                  </div>
+                   .filter((location: any) => location.evlocation.createdByuid === userId)
+                    .map((location: any) => (
+                       <li key={location.id}>
+                         <p>
+                          Latitude: {location.evlocation.evlocation.latitude}, Longitude:{" "}
+                          {location.evlocation.evlocation.longitude}
+                          </p>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => onDeleteLocation(location.id)}
+                            >
+                              Delete
+                            </button>
+                          </li>
+                        ))
+                    ) : (
+                      <p>No locations available.</p>
+                  )}
+            </ul>
+        </div>
+    </div>
                   )}
                   </div>
                 );
