@@ -16,6 +16,7 @@ import Charging from "./components/charging";
 import Management from "./components/management";
 import Profile from "./components/profile";
 import Forgot from "./components/forgot";
+import Checkout from "./components/checkout";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -109,6 +110,7 @@ function App() {
             <Route path="/Reservations" element={<Reservations />} />
             <Route path="/Charging" element={<Charging />} />
             <Route path="/Forgot" element={<Forgot />} />
+            <Route path="/Checkout" element={<Checkout />} />
             <Route path="/Management" element={<Management />} />
             <Route
               path="/profile"

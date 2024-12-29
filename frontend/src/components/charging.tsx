@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { API } from "./api/apiRequest";
 import { useUser } from "./userContext";
 import { getAnalytics, logEvent } from 'firebase/analytics';
+import { useNavigate } from 'react-router-dom';
 
 interface Car {
   model: string;
@@ -14,9 +15,11 @@ interface Car {
 }
 
 function Charging() {
+  const navigate = useNavigate();
+
   const location = useLocation();
   const reservation = location.state;
-
+  
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [car, setCar] = useState<Car>({
@@ -169,11 +172,16 @@ function Charging() {
         timestamp: disconnectTime.toISOString(),
       });
     }
+ 
+    navigate("/Checkout", { state: { energyUsed, reservation }});
+    
     setEnergyUsed(0);
     setInitialEnergy(car.current_energy)
     setWs(null);
     setIsConnected(false);
     setChargeTransactionId(null);
+
+    
   };
 
   const handleConfirm = (e: any) => {

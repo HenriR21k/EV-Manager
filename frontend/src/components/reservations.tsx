@@ -52,6 +52,7 @@ function Reservations() {
   }, [userId]);
   
   const handleReservationClick = (reservation: any) => {
+    console.log("ReserveTest: "+ JSON.stringify(reservation));
     navigate("/charging", { state: reservation });
   };
 

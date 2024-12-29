@@ -85,6 +85,7 @@ export const getUserReservations = async (req, res, next) => {
                             reservationsArray.push({
                                 id: reservationDoc.id,
                                 locationId: doc.id,
+                                createdByuid: doc.data().createdByuid,
                                 evlocation: doc.data().evlocation,
                                 start: reservationDoc.data().start,
                                 end: reservationDoc.data().end,
