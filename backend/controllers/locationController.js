@@ -65,6 +65,80 @@ export const addReservation = async (req, res, next) => {
     }
 }
 
+export const addExtraUserDetails = async (req, res, next) => {
+    try {
+        const userID = req.body.userId;
+        const paypalEmail = req.body.paypalEmail;
+        const merchantId = req.body.merchantId
+        const data = {userID, paypalEmail, merchantId};
+
+        await setDoc(doc(collection(db, "ExtraUserDetails")), data)
+        res.json("Paypal successfully added")
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
+}
+
+export const getExtraUserDetails = async (req, res, next) => {
+    try {
+        const userId = req.params.id;
+        const extraUserDetailsRef = collection(db, 'ExtraUserDetails');
+        const data = await getDocs(extraUserDetailsRef);
+        
+        if (data.empty) {
+            res.status(404).send('No extra user details found');
+            return;
+        }
+
+        let userDetails = null;
+        data.forEach(doc => {
+            if (doc.data().userID === userId) {
+                userDetails = {
+                    id: doc.id,
+                    ...doc.data()
+                };
+            }
+        });
+
+        if (!userDetails) {
+            res.status(404).send('No extra details found for this user');
+            return;
+        }
+
+        res.send(userDetails);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+
+   //fetch id that passed into the url.
+   //now call api to fetch the list of extrauserdetails.
+   //now we only want the extra user detail that belongs to the user.
+   //so we filter by the current users id that matches each objects userId attribute.
+   //(The filter part is probably the most challenging aspect).
+   //So realistically, it should only retrieve one object.
+   //So in the frontend, you can access the paypal email by doing something like:
+   //extraUserDetails.paypalEmail.
+    //In the frontend you need only observe extraUserDetails which should display extraUserDetails object that be
+}
+
+/*
+export const getUser = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const UserDoc = doc(db, 'Users', id);
+        const data = await getDoc(UserDoc);
+        if (!data.exists()) {
+            res.status(404).send('User with the given ID not found');
+        } else {
+            res.send(data.data());
+        }
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+*/
+
+
 export const getUserReservations = async (req, res, next) => {
     try {
         const userId = req.params.userId;

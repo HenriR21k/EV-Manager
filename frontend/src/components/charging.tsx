@@ -172,7 +172,8 @@ function Charging() {
         timestamp: disconnectTime.toISOString(),
       });
     }
- 
+
+    console.log("ReservationPart2"+reservation)
     navigate("/Checkout", { state: { energyUsed, reservation }});
     
     setEnergyUsed(0);
@@ -186,13 +187,20 @@ function Charging() {
 
   const handleConfirm = (e: any) => {
     e.preventDefault();
+
+    if (currentEnergyInput>=energyCapacityInput){
+      toast.error("Current energy must be smaller than capacity", {
+        position: "bottom-center",
+      });
+      return
+    }
     setCar({
       model: modelInput,
       energy_capacity: energyCapacityInput,
       current_energy: currentEnergyInput,
     });
     console.log(JSON.stringify(car));
-    setInitialEnergy(car.current_energy);
+    setInitialEnergy(currentEnergyInput);
     setIsConfirmed(true);
   };
 

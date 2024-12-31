@@ -37,16 +37,19 @@ body {
   background-color: #34c3d1;
 }
 
-.home-container, .management-container, .reservations-container, .charging-container, .login-container, .profile-container, .register-container, .forgot-container {
+.home-container, .management-container, .reservations-container, .charging-container, .login-container, .profile-container, .register-container, .forgot-container, .checkout-container {
   max-width: 100%;
   max-height: 100%;
   padding: 20px;
   margin: auto;
   text-align: center;
 }
-.home-container h1, .management-container h1, .reservations-container h1, .charging-container h1, .login-container h1, .profile-container h1, .register-container h1, .forgot-container h1 {
+.home-container h1, .management-container h1, .reservations-container h1, .charging-container h1, .login-container h1, .profile-container h1, .register-container h1, .forgot-container h1, .checkout-container h1 {
   margin-bottom: 20px;
   color: white;
+}
+.home-container p, .management-container p, .reservations-container p, .charging-container p, .login-container p, .profile-container p, .register-container p, .forgot-container p, .checkout-container p {
+  color: #ffd539;
 }
 
 .map-container {

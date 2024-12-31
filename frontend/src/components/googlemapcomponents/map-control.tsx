@@ -82,24 +82,22 @@ export const CustomMapControl = ({controlPosition,onPlaceSelect, userLocations, 
           <span className="close" onClick={() => setIsManageModalOpen(false)}>
             &times;
           </span>
-          <h2>Your Locations</h2>
-          <ul>
+          <label>Your Locations</label>
+          <ul style={{listStyleType: "none"}}>
             {userLocations && userLocations.length > 0 ? (
                 userLocations
                    .filter((location: any) => location.evlocation.createdByuid === userId)
                     .map((location: any) => (
-                       <li key={location.id}>
-                         <p>
+                        <li key={location.id}>
                           Latitude: {location.evlocation.evlocation.latitude}, Longitude:{" "}
                           {location.evlocation.evlocation.longitude}
-                          </p>
                           <button
                             className="btn btn-danger"
                             onClick={() => onDeleteLocation(location.id)}
-                            >
-                              Delete
-                            </button>
-                          </li>
+                          >
+                            Delete
+                          </button>
+                        </li>
                         ))
                     ) : (
                       <p>No locations available.</p>

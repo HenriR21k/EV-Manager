@@ -97,12 +97,12 @@ export default function Management() {
     getAddress(marker.evlocation.evlocation.latitude,marker.evlocation.evlocation.longitude)
     
     const matchingLocation = locations.find((location: any) => 
-      location.evlocation.latitude === marker.evlocation.latitude && 
-      location.evlocation.longitude === marker.evlocation.longitude
+      location.evlocation.evlocation.latitude === marker.evlocation.evlocation.latitude && 
+      location.evlocation.evlocation.longitude === marker.evlocation.evlocation.longitude
     );
 
     console.log("This one"+JSON.stringify(matchingLocation))
-  
+    
     if (matchingLocation) {
       const reservations = matchingLocation.reservations.map((reservation: Reservation) => {
         return {
@@ -120,10 +120,18 @@ export default function Management() {
             hour: "2-digit",
             minute: "2-digit",
           }),          
+          endDate: new Date(reservation.end),
+          startDate: new Date(reservation.start)
         };
+
       });
   
-      setMarkerReservations(reservations);
+      const rightNow = new Date();
+      const futureReservations = reservations.filter(
+        (reservation: any) => reservation.endDate > rightNow
+      );
+
+      setMarkerReservations(futureReservations);
     } else {
       setMarkerReservations([]);
       console.log("No matching location found");
@@ -172,11 +180,13 @@ export default function Management() {
     }
 
     try {
-      const matchingLocation = locations.find((location: Location) =>
-        location.evlocation.latitude === selectedMarker.latitude &&
-        location.evlocation.longitude === selectedMarker.longitude
-      );
 
+
+      const matchingLocation = locations.find((location: any) => 
+        location.evlocation.evlocation.latitude === selectedMarker.evlocation.latitude && 
+        location.evlocation.evlocation.longitude === selectedMarker.evlocation.longitude
+      );
+      console.log("matchingloc"+JSON.stringify(matchingLocation));
       handleReservationPost(startDateTime, endDateTime, matchingLocation.id, userId)
       
     } catch (error) {
@@ -207,8 +217,6 @@ export default function Management() {
     loadLocations(endpoint)
   }
 
-  
-
   const handleDeleteLocation = async (locationId: string) => {
     try {
       const outcome = await API.delete(`/Location/${locationId}`);
@@ -219,8 +227,6 @@ export default function Management() {
     }
   };
   
- 
-
   return (
     <div className="management-container">
       <h1>Manage EV points</h1>
@@ -275,7 +281,7 @@ export default function Management() {
               <ul className="reservations-list">
                 {markerReservations.map((reservation, index) => (
                   <li key={index} className="reservation-item">
-                    {reservation.start} - {reservation.end}
+                    Start: {reservation.start} <br /> End: {reservation.end}
                   </li>
                 ))}
               </ul>
@@ -293,18 +299,18 @@ export default function Management() {
                   Start Date:
                   <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
                 </label>
-              </div>
               <div>
                 <label>
                   Start Time:
                   <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required/>
                 </label>
               </div>
-              <label>
-                End Date:
-                <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required/>
-              </label>
+                <label>
+                  End Date:
+                  <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required/>
+                </label>
               <div>
+              </div>
                 <label>
                   End Time:
                   <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required/>

@@ -23,6 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { auth } from "./config/firebase";
 import Register from "./components/register";
 import { UserProvider } from "./components/userContext";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 function App() {
   const [user, setUser] = useState();
@@ -32,6 +33,7 @@ function App() {
     });
   });
   return (
+
   <UserProvider>
     <Router>
       <div>
@@ -62,6 +64,8 @@ function App() {
                 >
                   Home
                 </NavLink>
+                {user && (
+                  <>
                 <NavLink
                   className={({ isActive }) =>
                     isActive ? "nav-link active" : "nav-link"
@@ -78,6 +82,8 @@ function App() {
                 >
                   Reservations
                 </NavLink>
+                </>
+                )}
               </div>
               <div className="navbar-nav">
                 {user ? (

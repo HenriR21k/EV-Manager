@@ -7,6 +7,7 @@ import configuration from "../config/configuration";
 function Reservations() {
   const { userId } = useUser();
   const [userReservations, setUserReservations] = useState([]);
+  const [showPastReservations, setShowPastReservations] = useState(false);
   const navigate = useNavigate();
 
   const API_KEY = configuration.API.API_KEY;
@@ -48,23 +49,32 @@ function Reservations() {
     };
 
   useEffect(() => {
-    if (userId) {fetchUserReservations();}
+    if (userId) {
+      fetchUserReservations();
+    }
   }, [userId]);
   
   const handleReservationClick = (reservation: any) => {
     console.log("ReserveTest: "+ JSON.stringify(reservation));
     navigate("/charging", { state: reservation });
   };
+  const now = new Date();
+  const futureReservations = userReservations.filter(
+    (reservation: any) => new Date(reservation.end) > now
+  );
+  const pastReservations = userReservations.filter(
+    (reservation: any) => new Date(reservation.end) <= now
+  );
 
   return (
     <div className="reservations-container">
       <div className="auth-wrapper">
         <div className="auth-inner">
-          {userReservations.length > 0 ? (
+          {futureReservations.length > 0 ? (
             <div className="user-reservations">
                 <h3>Your Reservations</h3>
                 <ul className="reservations-list">
-                    {userReservations.map((reservation: any) => (
+                    {futureReservations.map((reservation: any) => (
                         <li 
                           key={reservation.id}
                           className="reservation-item"
@@ -78,10 +88,48 @@ function Reservations() {
                         </li>
                     ))}
                 </ul>
+
             </div>
-        ) : (
-            <p>No reservations found</p>
-        )}  
+          ) : (
+              <h3>No current reservations</h3>
+          )}  
+          {showPastReservations ? (
+            <button type="submit"
+            className="btn btn-primary mb-3"
+            onClick={() => setShowPastReservations(false)}
+            style={{ cursor: "pointer"}}
+            >
+              Hide Past Reservations
+            </button>
+          ) : (
+            <button type="submit"
+            className="btn btn-primary mb-3"
+            onClick={() => setShowPastReservations(true)}
+            style={{ cursor: "pointer" }}
+            >
+              Show Past Reservations
+            </button>
+          )}
+          {pastReservations.length > 0 && showPastReservations ? (
+            <div className="user-reservations">
+                <h3>Your past reservations</h3>
+                <ul className="reservations-list">
+                    {pastReservations.map((reservation: any) => (
+                        <li 
+                          key={reservation.id}
+                          className="reservation-item"
+                        >
+                            <div>Location: {reservation.evlocation.latitude}, {reservation.evlocation.longitude}</div>
+                            <div>Address: {reservation.address}</div>
+                            <div>Start: {new Date(reservation.start).toLocaleString()}</div>
+                            <div>End: {new Date(reservation.end).toLocaleString()}</div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+          ) : (
+            <h3></h3>
+          )}  
         </div>
       </div>
     </div>

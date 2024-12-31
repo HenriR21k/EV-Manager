@@ -91,6 +91,7 @@ function Register() {
                 className="form-control"
                 placeholder="Last name"
                 onChange={(e) => setLname(e.target.value)}
+                required
               />
             </div>
 
