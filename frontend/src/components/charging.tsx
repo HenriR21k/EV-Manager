@@ -43,7 +43,7 @@ function Charging() {
   const analytics = getAnalytics();
 
   const initializeWebSocket = (sendNow: boolean = false) => {
-    const socket = new WebSocket("ws://localhost:8081");
+    const socket = new WebSocket("wss://ev-manager-websocket.onrender.com");
 
     socket.onopen = () => {
       console.log("WebSocket connected");
