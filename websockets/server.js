@@ -3,7 +3,8 @@ import { ref, set } from 'firebase/database';
 import { WebSocketServer } from 'ws';
 
 // Create WebSocket server
-const wss = new WebSocketServer({ port: 8081 });
+const port = process.env.PORT || 8081; // Default to 8081 if PORT is not defined
+const wss = new WebSocketServer({ port });
 
 // Track client states
 const clientStates = new Map();
