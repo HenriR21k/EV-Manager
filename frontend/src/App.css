@@ -49,7 +49,7 @@ body {
   color: white;
 }
 .home-container p, .management-container p, .reservations-container p, .charging-container p, .login-container p, .profile-container p, .register-container p, .forgot-container p, .checkout-container p {
-  color: #ffd539;
+  color: #2263b5;
 }
 
 .map-container {
