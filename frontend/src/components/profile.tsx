@@ -115,7 +115,7 @@ function Profile() {
                   style={{ borderRadius: "50%" }}
                 />
               </div>
-              <h3>Welcome {userDetails.firstName} 🙏🙏</h3>
+              <h3>Welcome {userDetails.firstName}</h3>
               <div>
                 <p>Email: {userDetails.email}</p>
                 <p>First Name: {userDetails.firstName}</p>
@@ -141,9 +141,7 @@ function Profile() {
                   </>
                 )}
               </div>
-              <button className="mb-3 btn btn-primary" onClick={handleLogout}>
-                Logout
-              </button>
+              
             </>
           ) : (
             <p>Loading...</p>
@@ -184,7 +182,9 @@ function Profile() {
             <p>Merchant ID: {extraUserDetails.merchantId}</p>
             </>
           )}
-          
+          <button style={{width:"100%"}} className="btn btn-primary" onClick={handleLogout}>
+                Logout
+          </button>
         </div>
         
       </div>

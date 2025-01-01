@@ -37,10 +37,10 @@ export const CustomMapControl = ({controlPosition,onPlaceSelect, userLocations, 
   return (
     <div>
       <MapControl position={controlPosition}>
-        <button className="btn btn-primary" onClick={() => setIsAddModalOpen(true)}>
+        <button style={{marginRight:"10px"}}className="btn btn-primary" onClick={() => setIsAddModalOpen(true)}>
           Add Charging Point
         </button>
-        <button className="btn btn-primary" onClick={() => setIsManageModalOpen(true)}>
+        <button style={{marginLeft:"10px"}} className="btn btn-primary" onClick={() => setIsManageModalOpen(true)}>
           Manage Charging Point
         </button>
       </MapControl>
@@ -88,7 +88,7 @@ export const CustomMapControl = ({controlPosition,onPlaceSelect, userLocations, 
                 userLocations
                    .filter((location: any) => location.evlocation.createdByuid === userId)
                     .map((location: any) => (
-                        <li key={location.id}>
+                        <li key={location.id} style={{marginTop:"10px"}}>
                           Latitude: {location.evlocation.evlocation.latitude}<br></br> Longitude:{" "}
                           {location.evlocation.evlocation.longitude}
                           <button
