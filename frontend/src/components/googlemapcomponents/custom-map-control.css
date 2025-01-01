@@ -26,6 +26,7 @@
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  
 }
 
 .close:hover,
@@ -36,9 +37,28 @@
 }
 
 .autocomplete-control {
-  margin-top: 10px;
-  margin-bottom: 20px;
 }
 .org-label {
   margin-bottom: 0px;
+}
+.reservation-form {
+  max-width: 350px;
+  display: grid;
+  
+  margin: 0 auto 20px;
+  margin-bottom: 0px;
+}
+
+.pac-target-input,
+.modal-form input[type="text"],
+.modal-form input[type="time"] {
+  padding: 5px 5px;
+  font-size: 16px;
+  border: 2px solid #34c3d1;
+  border-radius: 10px;
+  width: 100%;
+  background-color: white;
+  color: #34c3d1;
+  margin-bottom: 10px;
+  margin-top:10px;
 }

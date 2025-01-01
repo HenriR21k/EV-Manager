@@ -52,7 +52,7 @@ export const CustomMapControl = ({controlPosition,onPlaceSelect, userLocations, 
             <span className="close" onClick={() => setIsAddModalOpen(false)}>
               &times;
             </span>
-            <form onSubmit={(e) => handleSubmit(e, "add")}>
+            <form className="modal-form" onSubmit={(e) => handleSubmit(e, "add")}>
               <label className="org-label">Organisation/Name:</label>
               <input
                 type="text"
@@ -82,18 +82,19 @@ export const CustomMapControl = ({controlPosition,onPlaceSelect, userLocations, 
           <span className="close" onClick={() => setIsManageModalOpen(false)}>
             &times;
           </span>
-          <label>Your Locations</label>
-          <ul style={{listStyleType: "none"}}>
+          <label>Your Charging Locations</label>
+          <ul style={{listStyleType: "none", paddingLeft: "0", color: "#2263b5"}}>
             {userLocations && userLocations.length > 0 ? (
                 userLocations
                    .filter((location: any) => location.evlocation.createdByuid === userId)
                     .map((location: any) => (
                         <li key={location.id}>
-                          Latitude: {location.evlocation.evlocation.latitude}, Longitude:{" "}
+                          Latitude: {location.evlocation.evlocation.latitude}<br></br> Longitude:{" "}
                           {location.evlocation.evlocation.longitude}
                           <button
                             className="btn btn-danger"
                             onClick={() => onDeleteLocation(location.id)}
+                            style={{width: "100%"}}
                           >
                             Delete
                           </button>

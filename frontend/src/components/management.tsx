@@ -230,7 +230,6 @@ export default function Management() {
   return (
     <div className="management-container">
       <h1>Manage EV points</h1>
-      <div>User ID: {userId}</div>
       <div className="map-container">
         <APIProvider apiKey={configuration.API.API_KEY}>
           <Map
@@ -294,19 +293,19 @@ export default function Management() {
             onSubmit={(event) => handleReservation(event,selectedMarker,startDate,startTime,endDate,endTime)}
             >
             <label>
-              Start Date:
+              Start Date
               <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
             </label>
             <label>
-              Start Time:
+              Start Time
               <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required/>
             </label>
             <label>
-              End Date:
+              End Date
               <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required/>
             </label>
             <label>
-              End Time:
+              End Time
               <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required/>
             </label>
             <button type="submit" className="btn btn-primary">

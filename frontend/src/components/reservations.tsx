@@ -97,7 +97,7 @@ function Reservations() {
             <button type="submit"
             className="btn btn-primary mb-3"
             onClick={() => setShowPastReservations(false)}
-            style={{ cursor: "pointer"}}
+            style={{ cursor: "pointer", width: "100%"}}
             >
               Hide Past Reservations
             </button>
@@ -105,7 +105,7 @@ function Reservations() {
             <button type="submit"
             className="btn btn-primary mb-3"
             onClick={() => setShowPastReservations(true)}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", width: "100%" }}
             >
               Show Past Reservations
             </button>

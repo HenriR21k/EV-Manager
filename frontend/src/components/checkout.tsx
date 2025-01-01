@@ -31,9 +31,8 @@ const Checkout = () => {
             <div>
                 {extraUserDetails ? (
                   <div>
-                    <h1>payee email</h1>
-                    <p>payee email {extraUserDetails.paypalEmail}</p>
-                    <p>merchant id: {extraUserDetails.merchantId}</p>
+                    <p>Charging Point Owner's PayPal: <br></br> {extraUserDetails.paypalEmail}</p>
+                    
                   </div>
                 ) : (
                   <p>No user data available</p>
@@ -41,10 +40,9 @@ const Checkout = () => {
               </div>
             
             <p className="checkout-description">
-            {"Owner of this EV Charger: "+state.reservation.createdByuid}
-            </p>
-            <p>User has used this amount of energy: {state.energyUsed}</p>
-            <p>Current user id: {state.reservation.user}</p>
+            
+            </p>  
+            <p>You have taken this much energy:<span style={{color:"#34c3d1"}}> {state.energyUsed} kW</span></p>
             <h3 className="checkout-price">£{state.energyUsed*0.04}p</h3>
               {/*Display button only if payer and payee emails are loaded */}  
             {extraUserDetails ? (
