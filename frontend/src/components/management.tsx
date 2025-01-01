@@ -293,30 +293,22 @@ export default function Management() {
             className="reservation-form"
             onSubmit={(event) => handleReservation(event,selectedMarker,startDate,startTime,endDate,endTime)}
             >
-            <div>
-              <div>
-                <label>
-                  Start Date:
-                  <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
-                </label>
-              <div>
-                <label>
-                  Start Time:
-                  <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required/>
-                </label>
-              </div>
-                <label>
-                  End Date:
-                  <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required/>
-                </label>
-              <div>
-              </div>
-                <label>
-                  End Time:
-                  <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required/>
-                </label>
-              </div>
-            </div>
+            <label>
+              Start Date:
+              <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} required />
+            </label>
+            <label>
+              Start Time:
+              <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required/>
+            </label>
+            <label>
+              End Date:
+              <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} required/>
+            </label>
+            <label>
+              End Time:
+              <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required/>
+            </label>
             <button type="submit" className="btn btn-primary">
               Reserve EV Charging Point
             </button>
