@@ -146,6 +146,9 @@ function Profile() {
           ) : (
             <p>Loading...</p>
           )}
+          <button style={{width:"100%"}} className="mb-3 btn btn-primary" onClick={handleLogout}>
+                Logout
+          </button>
           {!extraUserDetails ? (
             <>
           <h3>PayPal for charging point owners</h3>
@@ -182,9 +185,6 @@ function Profile() {
             <p>Merchant ID: {extraUserDetails.merchantId}</p>
             </>
           )}
-          <button style={{width:"100%"}} className="btn btn-primary" onClick={handleLogout}>
-                Logout
-          </button>
         </div>
         
       </div>

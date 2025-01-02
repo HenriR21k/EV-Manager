@@ -51,6 +51,9 @@ body {
 .home-container p, .management-container p, .reservations-container p, .charging-container p, .login-container p, .profile-container p, .register-container p, .forgot-container p, .checkout-container p {
   color: #2263b5;
 }
+.home-container span, .management-container span, .reservations-container span, .charging-container span, .login-container span, .profile-container span, .register-container span, .forgot-container span, .checkout-container span {
+  color: #ffd539;
+}
 
 .map-container {
   max-width: 1000px;

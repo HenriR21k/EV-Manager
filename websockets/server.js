@@ -2,6 +2,16 @@ import { db } from './firebase.js';
 import { ref, set } from 'firebase/database';
 import { WebSocketServer } from 'ws';
 
+const getIncrementTime = () => {
+  const currentHour = new Date().getHours();
+  if (currentHour >= 12 && currentHour <18) {
+    return 1500;
+  } else if (currentHour >= 6 && currentHour <12 ) {
+    return 3500;
+  } else {
+    return 7000;
+  }
+}
 // Create WebSocket server
 const port = process.env.PORT || 8081; // Default to 8081 if PORT is not defined
 const wss = new WebSocketServer({ port });
@@ -38,6 +48,8 @@ wss.on('connection', (ws) => {
         clientState.energy = data.car.current_energy; // Start with the current energy level
         clientState.capacity = data.car.energy_capacity; // Set the max capacity
 
+        const incrementTime = getIncrementTime();
+
         clientState.interval = setInterval(() => {
           if (clientState.energy < clientState.capacity) {
             clientState.energy += 1;
@@ -50,7 +62,7 @@ wss.on('connection', (ws) => {
             clearInterval(clientState.interval); // Stop incrementing when capacity is reached
             clientState.interval = null;
           }
-        }, 4000); // Increment every second
+        }, incrementTime); // Increment every second
       }
     } else if (data.type === "Stop") {
       console.log("Stopping for client");
