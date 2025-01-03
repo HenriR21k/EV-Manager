@@ -10,7 +10,8 @@ const PaypalCheckoutButton = (props) => {
     <PayPalScriptProvider
       options={{
         clientId: "AfwlgYBcXmhIReg_CiCYMHZjuaZKwn8uUnOWBtFs5yO3drQAwC70a3VvQQoNcF7w2pGsceRrRzgujsBV",
-        merchantId: configuration.merchantId
+        merchantId: configuration.merchantId,
+        currency: 'GBP'
       }}
     >
       <PayPalButtons
@@ -20,7 +21,7 @@ const PaypalCheckoutButton = (props) => {
               {
                 amount: {
                   value: product.price.toFixed(2),
-                  currency_code: "USD",
+                  currency_code: "GBP",
                 },
                 payee: {
                   email_address: payeeEmail,
